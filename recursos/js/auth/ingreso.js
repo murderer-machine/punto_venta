@@ -78,9 +78,10 @@ const Ingreso = () => {
                             Descubre el Nuevo
                         </h1>
                         <h1>
-                            Portal de CONFIANZA & VIDA
+                            Módulo de Punto Venta<br />
+                            CONFIANZA & VIDA
                         </h1>
-                        <p>Ahora podrás realizar todas tus operaciones y consultas en un solo lugar.</p>
+                        <p>Ahora podrás realizar todas tus operaciones PV - SOAT.</p>
                     </Col>
                     <Col xs={12} lg={2} className="d-none d-sm-none d-md-none d-lg-flex d-xl-flex justify-content-center flex-column  ingreso_centro hidden-md-down">
                         <Image
@@ -137,7 +138,6 @@ const Ingreso = () => {
                             <Col xs={12} className="mb-3">
                                 <Button variant="contained" type="submit" className="btn-principal" disabled={spinner_button}>{spinner_button ? (<CircularProgress size={15} className="spinner_blanco mr-2" />) : (<></>)}Ingresar</Button>
                             </Col>
-                            {JSON.stringify(datos)}
                         </Form>
                     </Col>
                 </Row>

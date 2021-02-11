@@ -7,22 +7,25 @@ use alekas\core\Model;
 class Usuarios extends Model {
 
     protected static $table = "t_usuarios";
-    protected $id;
-    protected $dni;
-    protected $nombres;
-    protected $apellidos;
-    protected $correo;
-    protected $password;
-    protected $fecha_creacion = fecha;
+    public $id;
+    public $dni;
+    public $nombres;
+    public $apellidos;
+    public $direccion;
+    public $correo;
+    public $celular;
+    public $password;
+    public $fecha_creacion = fecha;
 
-    function __construct($id, $dni, $nombres, $apellidos, $correo, $password) {
+    function __construct($id, $dni, $nombres, $apellidos, $direccion, $correo, $celular, $password) {
         $this->id = $id;
         $this->dni = $dni;
         $this->nombres = $nombres;
         $this->apellidos = $apellidos;
+        $this->direccion = $direccion;
         $this->correo = $correo;
+        $this->celular = $celular;
         $this->password = $password;
-        $this->fecha_creacion = $fecha_creacion;
     }
 
     function getId() {
@@ -41,8 +44,16 @@ class Usuarios extends Model {
         return $this->apellidos;
     }
 
+    function getDireccion() {
+        return $this->direccion;
+    }
+
     function getCorreo() {
         return $this->correo;
+    }
+
+    function getCelular() {
+        return $this->celular;
     }
 
     function getPassword() {
@@ -69,8 +80,16 @@ class Usuarios extends Model {
         $this->apellidos = $apellidos;
     }
 
+    function setDireccion($direccion): void {
+        $this->direccion = $direccion;
+    }
+
     function setCorreo($correo): void {
         $this->correo = $correo;
+    }
+
+    function setCelular($celular): void {
+        $this->celular = $celular;
     }
 
     function setPassword($password): void {

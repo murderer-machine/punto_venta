@@ -11,6 +11,7 @@ const Inicio = () => {
     const [images, setImages] = useState([])
     const maxNumber = 4
     const onChange = (imageList, addUpdateIndex) => {
+        console.log(imageList)
         setImages(imageList)
     }
 
@@ -28,6 +29,7 @@ const Inicio = () => {
                                         onChange={onChange}
                                         maxNumber={maxNumber}
                                         dataURLKey="data_url"
+                                        
                                     >
                                         {({
                                             imageList,
