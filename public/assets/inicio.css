@@ -144,3 +144,17 @@ Note: Beware of modifying this element as it can break the animations - you shou
 .react-datepicker-popper {
   z-index: 2;
 }
+.dropzone {
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  border-width: 2px;
+  border-style: dashed;
+  border-color: #2a427b;
+  background-color: rgba(42, 66, 123, 0.1);
+  color: #2a427b;
+  cursor: pointer;
+  font-weight: 700;
+}
