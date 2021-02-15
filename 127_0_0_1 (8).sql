@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-02-2021 a las 00:25:41
+-- Tiempo de generación: 15-02-2021 a las 22:09:21
 -- Versión del servidor: 10.4.13-MariaDB
 -- Versión de PHP: 7.4.8
 
@@ -55,6 +55,38 @@ INSERT INTO `t_subagentes` (`id`, `nombres`, `apellidos`, `abreviatura`, `correo
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `t_subagentes_ventas`
+--
+
+CREATE TABLE `t_subagentes_ventas` (
+  `id` int(11) NOT NULL,
+  `id_subagente` int(11) NOT NULL,
+  `nombre_archivo_pdf` varchar(255) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `pagado` int(11) NOT NULL COMMENT '0 = no pagado\r\n1 = pagado',
+  `fecha_creacion` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `t_subagentes_ventas`
+--
+
+INSERT INTO `t_subagentes_ventas` (`id`, `id_subagente`, `nombre_archivo_pdf`, `id_usuario`, `pagado`, `fecha_creacion`) VALUES
+(1, 1, '602ad6814d9ea.pdf', 1, 0, '2021-02-15 15:16:01'),
+(2, 1, '602ad734af4a9.pdf', 1, 0, '2021-02-15 15:19:00'),
+(3, 1, '602ad78dc0226.pdf', 1, 0, '2021-02-15 15:20:29'),
+(4, 1, '602adb4ed7eaa.pdf', 1, 0, '2021-02-15 15:36:30'),
+(5, 1, '602adb602ec4e.pdf', 1, 0, '2021-02-15 15:36:48'),
+(6, 1, '602adb7081fe3.pdf', 1, 0, '2021-02-15 15:37:04'),
+(7, 1, '602adb72e75b2.pdf', 1, 0, '2021-02-15 15:37:06'),
+(8, 1, '602addba858e9.pdf', 1, 0, '2021-02-15 15:46:50'),
+(9, 1, '602adfff189ab.pdf', 1, 0, '2021-02-15 15:56:31'),
+(10, 1, '602ae023c038f.pdf', 1, 0, '2021-02-15 15:57:07'),
+(11, 1, '602ae1128d3fb.pdf', 1, 0, '2021-02-15 16:01:06');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `t_usuarios`
 --
 
@@ -89,6 +121,12 @@ ALTER TABLE `t_subagentes`
   ADD KEY `id` (`id`);
 
 --
+-- Indices de la tabla `t_subagentes_ventas`
+--
+ALTER TABLE `t_subagentes_ventas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `t_usuarios`
 --
 ALTER TABLE `t_usuarios`
@@ -103,6 +141,12 @@ ALTER TABLE `t_usuarios`
 --
 ALTER TABLE `t_subagentes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `t_subagentes_ventas`
+--
+ALTER TABLE `t_subagentes_ventas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `t_usuarios`

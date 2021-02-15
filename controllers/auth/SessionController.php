@@ -24,7 +24,10 @@ class SessionController extends Controller {
             return $this->json($resultado["error"] = 0);
         }
     }
-
+    public static function idDesencriptado() {
+            $token = new GenerarToken();
+            return $token->Desencriptar(Session::getValue('id'));
+    }
     public function logout() {
         Session::destroy();
         header("Location: /");

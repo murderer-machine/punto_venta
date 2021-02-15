@@ -18,10 +18,10 @@ class Subagentes extends Model {
     public $ubicacion;
     public $avatar;
     public $fecha_activacion;
-    public $fecha_creacion = fecha;
-    public $id_usuario = 0;
+    public $fecha_creacion;
+    public $id_usuario;
 
-    function __construct($id, $nombres, $apellidos, $abreviatura, $correo, $celular, $direccion, $referencia, $ubicacion, $avatar, $fecha_activacion) {
+    function __construct($id, $nombres, $apellidos, $abreviatura, $correo, $celular, $direccion, $referencia, $ubicacion, $avatar, $fecha_activacion, $fecha_creacion, $id_usuario) {
         $this->id = $id;
         $this->nombres = $nombres;
         $this->apellidos = $apellidos;
@@ -33,6 +33,8 @@ class Subagentes extends Model {
         $this->ubicacion = $ubicacion;
         $this->avatar = $avatar;
         $this->fecha_activacion = $fecha_activacion;
+        $this->fecha_creacion = $fecha_creacion;
+        $this->id_usuario = $id_usuario;
     }
 
     function getId() {

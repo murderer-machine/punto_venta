@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 const Inicio = () => {
     const [subagentes, setSubagentes] = useState([])
+    const [ventas, setVentas] = useState([])
+    const [condicionVentas, setCondicionVentas] = useState(true)
     const [datos, setDatos] = useState({
         id_subagente: {},
     })
@@ -29,8 +31,10 @@ const Inicio = () => {
     const subirCertificado = () => {
         var formData = new FormData()
         for (const file of acceptedFiles) {
-            formData.append('avatar[]', file, file.name)
+            formData.append('documento[]', file, file.name)
         }
+        formData.append('id_subagente', datos.id_subagente.id)
+        formData.append('nombre_subagente', datos.id_subagente.abreviatura)
         var url = `/subagentes/subir`
         fetch(url, {
             method: 'POST',
@@ -40,14 +44,24 @@ const Inicio = () => {
             .catch(error => console.error('Error:', error))
             .then(response => {
                 alert(response)
+                console.log(response)
+                setCondicionVentas(!condicionVentas)
             });
+    }
+    const cargarVentas = () => {
+        fetch('/subagentes/ventas')
+            .then(response => response.json())
+            .then(data => setVentas(data));
     }
     useEffect(() => {
         mostrarSubagentes()
     }, [])
+    useEffect(() => {
+        cargarVentas()
+    }, [condicionVentas])
     return (
         <Menu modulo="inicio">
-            <Container className="mt-2">
+            <Container className="mt-2" fluid>
                 <Row>
                     <Col xs={12} lg={5}>
                         <Card className="p-3">
@@ -98,6 +112,7 @@ const Inicio = () => {
                         </Card>
                     </Col>
                     <Col xs={12} lg={7}>
+                        {JSON.stringify(ventas)}
                     </Col>
                 </Row>
             </Container>
