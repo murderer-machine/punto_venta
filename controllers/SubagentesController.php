@@ -21,13 +21,10 @@ class SubagentesController extends Controller {
     }
 
     public function subir() {
-
-        $carpeta_agente = Aplicacion::$root_principal . "\\documentos_subidos\\certificados_pv\\PV. " . mb_strtoupper($_POST["nombre_subagente"]);
+        $carpeta_agente = "./documentos_subidos/certificados_pv/PV. " . mb_strtoupper($_POST["nombre_subagente"]);
         file_exists($carpeta_agente) ? '' : mkdir($carpeta_agente, 0777);
-
-        $output_dir = Aplicacion::$root_principal . "\\documentos_subidos\\certificados_pv\\PV. " . mb_strtoupper($_POST["nombre_subagente"]) . "\\" . fecha;
+        $output_dir = "./documentos_subidos/certificados_pv/PV. " . mb_strtoupper($_POST["nombre_subagente"]) . "/" . fecha;
         file_exists($output_dir) ? '' : mkdir($output_dir, 0777);
-
         $subaganteventas = new SubagentesVentas(null, $_POST['id_subagente'], SubagentesController::scriptSubir($output_dir), SessionController::idDesencriptado(), 0, fecha_hora);
         $respuesta = $subaganteventas->create();
         return $this->json($respuesta['error']);
@@ -55,8 +52,14 @@ class SubagentesController extends Controller {
     }
 
     public function ventas() {
-        $ventas = SubagentesVentas::select()->run()->datos(true);
-        return $ventas;
+        $ventas = SubagentesVentas::select()->where([['pagado', 0]])->orderBy([['id', 'DESC']])->run()->datos();
+        foreach ($ventas as $key => $value) {
+            $id_subagente = Subagentes::select('id,abreviatura')->where([['id', $value['id_subagente']]])->run()->datos();
+            $fecha = explode(' ', $value['fecha_creacion']);
+            $ventas[$key]['ruta'] = "/documentos_subidos/certificados_pv/PV. " . mb_strtoupper($id_subagente[0]['abreviatura']) . "/" . $fecha[0] . "/" . $value['nombre_archivo_pdf'];
+            $ventas[$key]['id_subagente'] = $id_subagente[0];
+        }
+        return $this->json($ventas);
     }
 
 }
