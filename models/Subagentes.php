@@ -20,8 +20,9 @@ class Subagentes extends Model {
     public $fecha_activacion;
     public $fecha_creacion;
     public $id_usuario;
+    public $tipo_negocio;
 
-    function __construct($id, $nombres, $apellidos, $abreviatura, $correo, $celular, $direccion, $referencia, $ubicacion, $avatar, $fecha_activacion, $fecha_creacion, $id_usuario) {
+    function __construct($id, $nombres, $apellidos, $abreviatura, $correo, $celular, $direccion, $referencia, $ubicacion, $avatar, $fecha_activacion, $fecha_creacion, $id_usuario, $tipo_negocio) {
         $this->id = $id;
         $this->nombres = $nombres;
         $this->apellidos = $apellidos;
@@ -35,6 +36,7 @@ class Subagentes extends Model {
         $this->fecha_activacion = $fecha_activacion;
         $this->fecha_creacion = $fecha_creacion;
         $this->id_usuario = $id_usuario;
+        $this->tipo_negocio = $tipo_negocio;
     }
 
     function getId() {
@@ -85,8 +87,8 @@ class Subagentes extends Model {
         return $this->fecha_creacion;
     }
 
-    function getId_usuario() {
-        return $this->id_usuario;
+    function getTipo_negocio() {
+        return $this->tipo_negocio;
     }
 
     function setId($id): void {
@@ -135,6 +137,10 @@ class Subagentes extends Model {
 
     function setFecha_creacion($fecha_creacion): void {
         $this->fecha_creacion = $fecha_creacion;
+    }
+
+    function setTipo_negocio($tipo_negocio): void {
+        $this->tipo_negocio = $tipo_negocio;
     }
 
     function setId_usuario($id_usuario): void {

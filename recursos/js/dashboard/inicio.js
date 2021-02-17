@@ -23,6 +23,10 @@ const Inicio = () => {
     const [show, setShow] = useState(false)
     const [mensajeCertificado, setMensajeCertificado] = useState(false)
     const [spinner_certificado, SetSpinner_certificado] = useState(false)
+    const [mensajesValidacionCargaCertificado, setMensajesValidacionCargaCertificado] = useState({
+        success: false,
+        error: false,
+    })
     //Renders
     const files = acceptedFiles.map(file => (
         <li key={file.path}>
@@ -41,6 +45,12 @@ const Inicio = () => {
     useEffect(() => {
         cargarVentas()
     }, [condicionVentas])
+    const LimpiarValidacionCargaCertificado = () => {
+        setMensajesValidacionCargaCertificado({
+            success: false,
+            error: false,
+        })
+    }
     //Funciones
     const mostrarSubagentes = async () => {
         await fetch('/subagentes/mostrar')
@@ -67,13 +77,26 @@ const Inicio = () => {
                 .then(response => response.json())
                 .catch(error => console.error('Error:', error))
                 .then(response => {
-                    SetSpinner_certificado(false)
-                    setCondicionVentas(!condicionVentas)
-                    setAcceptedFiles([])
-                    setDatos({ ...datos, id_subagente: {} })
+                    if (response == 0) {
+                        setMensajesValidacionCargaCertificado({
+                            success: true,
+                            error: false,
+                        })
+                        SetSpinner_certificado(false)
+                        setCondicionVentas(!condicionVentas)
+                        setAcceptedFiles([])
+                        setDatos({ ...datos, id_subagente: {} })
+                    }
+                    if (response != 0) {
+                        setMensajesValidacionCargaCertificado({
+                            success: false,
+                            error: true,
+                        })
+                        LimpiarValidacionCargaCertificado()
+                        SetSpinner_certificado(false)
+                    }
                 });
         }
-
     }
     const cargarVentas = () => {
         fetch('/subagentes/ventas')
@@ -101,9 +124,11 @@ const Inicio = () => {
                                         </Alert>
                                     </Col>
                                 </>) : (<></>)}
-
                                 <Col xs={12}>
-                                    <Dropzone onDrop={acceptedFiles => setAcceptedFiles(acceptedFiles)} accept=".pdf" multiple={false}  >
+                                    <Dropzone onDrop={acceptedFiles => {
+                                        setAcceptedFiles(acceptedFiles)
+                                        LimpiarValidacionCargaCertificado()
+                                    }} accept=".pdf" multiple={false} >
                                         {({ getRootProps, getInputProps }) => (
                                             <>
                                                 <div {...getRootProps({ className: 'dropzone m-0 p-3 mb-2' })} >
@@ -153,6 +178,28 @@ const Inicio = () => {
                         </Card>
                     </Col>
                     <Col xs={12} lg={12}>
+                        {mensajesValidacionCargaCertificado.success ? (<>
+                            <Card className="p-3 my-1">
+                                <Row>
+                                    <Col xs={12}>
+                                        <Alert severity="success">
+                                            Se subio y agrego correctamente.
+                                        </Alert>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </>) : (<></>)}
+                        {mensajesValidacionCargaCertificado.error ? (<>
+                            <Card className="p-3 my-1">
+                                <Row>
+                                    <Col xs={12}>
+                                        <Alert severity="error">
+                                            <b>Error</b> informar al área de sistemas.
+                                        </Alert>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </>) : (<></>)}
                         {ventas.map((venta, key_venta) => (
                             <Card className="p-3 my-1" key={key_venta}>
                                 <Row className="d-flex align-items-center text-center">
@@ -163,7 +210,7 @@ const Inicio = () => {
                                     </Col>
                                     <Col xs={2}><a href={venta.ruta} target="_blank"><Image src="./img/pdf.svg" className="inicio_img_pdf" /></a></Col>
                                     <Col xs={3}>{venta.pagado == 0 ? (<>
-                                        <Button variant="contained" type="button" className="btn-principal" size="small" onClick={handleShow}>Pagar</Button>
+                                        <Button variant="contained" type="button" className="btn-principal" size="small" onClick={handleShow}>Voucher</Button>
                                     </>) : (<></>)}</Col>
                                 </Row>
                             </Card>

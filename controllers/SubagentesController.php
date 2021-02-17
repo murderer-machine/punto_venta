@@ -25,12 +25,12 @@ class SubagentesController extends Controller {
         file_exists($carpeta_agente) ? '' : mkdir($carpeta_agente, 0777);
         $output_dir = "./documentos_subidos/certificados_pv/PV. " . mb_strtoupper($_POST["nombre_subagente"]) . "/" . fecha;
         file_exists($output_dir) ? '' : mkdir($output_dir, 0777);
-        $subaganteventas = new SubagentesVentas(null, $_POST['id_subagente'], SubagentesController::scriptSubir($output_dir), SessionController::idDesencriptado(), 0, fecha_hora);
+        $subaganteventas = new SubagentesVentas(null, $_POST['id_subagente'], SubagentesController::scriptSubirCertificado($output_dir), SessionController::idDesencriptado(), 0, fecha_hora);
         $respuesta = $subaganteventas->create();
         return $this->json($respuesta['error']);
     }
 
-    public static function scriptSubir($output_dir) {
+    public static function scriptSubirCertificado($output_dir) {
         if (isset($_FILES["documento"])) {
             $error = $_FILES["documento"]["error"];
             if (!is_array($_FILES["documento"]["name"])) {
@@ -56,7 +56,9 @@ class SubagentesController extends Controller {
         foreach ($ventas as $key => $value) {
             $id_subagente = Subagentes::select('id,abreviatura')->where([['id', $value['id_subagente']]])->run()->datos();
             $fecha = explode(' ', $value['fecha_creacion']);
+            $nombre_archivo_voucher = explode('.', $value['nombre_archivo_pdf']);
             $ventas[$key]['ruta'] = "/documentos_subidos/certificados_pv/PV. " . mb_strtoupper($id_subagente[0]['abreviatura']) . "/" . $fecha[0] . "/" . $value['nombre_archivo_pdf'];
+            $ventas[$key]['ruta_voucher'] = "/documentos_subidos/certificados_pv/PV. " . mb_strtoupper($id_subagente[0]['abreviatura']) . "/" . $fecha[0] . "/" . $nombre_archivo_voucher[0];
             $ventas[$key]['id_subagente'] = $id_subagente[0];
         }
         return $this->json($ventas);
