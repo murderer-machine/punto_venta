@@ -12,7 +12,7 @@ use alekas\controllers\auth\SessionController;
 class SubagentesController extends Controller {
 
     public function __construct() {
-        $this->VerificaSession();
+        //$this->VerificaSession();
     }
 
     public function mostrar() {
@@ -49,6 +49,30 @@ class SubagentesController extends Controller {
             }
         }
         return $uniqid . '.' . $FileType;
+    }
+
+    public function subirVoucher() {
+        SubagentesController::scriptSubirVoucher($_POST['nombre_archivo_imagen']);
+        return $this->json($_POST['nombre_archivo_imagen']);
+    }
+
+    public static function scriptSubirVoucher($output_dir) {
+        if (isset($_FILES["documento"])) {
+            $error = $_FILES["documento"]["error"];
+            if (!is_array($_FILES["documento"]["name"])) {
+                $fileName = $_FILES["documento"]["name"];
+                $FileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                move_uploaded_file($_FILES["documento"]["tmp_name"], ".".$output_dir . '.' . $FileType);
+            } else {
+                $fileCount = count($_FILES["documento"]["name"]);
+                for ($i = 0; $i < $fileCount; $i++) {
+                    $fileName = $_FILES["documento"]["name"][$i];
+                    $FileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                    move_uploaded_file($_FILES["documento"]["tmp_name"][$i], ".".$output_dir . '.' . $FileType);
+                }
+            }
+        }
+       
     }
 
     public function ventas() {

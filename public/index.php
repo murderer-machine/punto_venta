@@ -28,7 +28,7 @@ $app->ruta->get('subagentes/mostrar', [SubagentesController::class, 'mostrar']);
 $app->ruta->get('subagentes/ventas', [SubagentesController::class, 'ventas']);
 
 $app->ruta->post('subagentes/subir', [SubagentesController::class, 'subir']);
-
+$app->ruta->post('subagentes/subirvoucher', [SubagentesController::class, 'subirVoucher']);
 
 //Funciones
 
