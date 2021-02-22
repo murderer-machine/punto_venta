@@ -8,6 +8,7 @@ use alekas\core\Controller;
 use alekas\core\Aplicacion;
 use alekas\models\SubagentesVentas;
 use alekas\controllers\auth\SessionController;
+use alekas\models\SubagentesVouchers;
 
 class SubagentesController extends Controller {
 
@@ -52,27 +53,61 @@ class SubagentesController extends Controller {
     }
 
     public function subirVoucher() {
-        SubagentesController::scriptSubirVoucher($_POST['nombre_archivo_imagen']);
-        return $this->json($_POST['nombre_archivo_imagen']);
+        $resultado = SubagentesController::scriptSubirVoucher($_POST['nombre_archivo_imagen']);
+        if ($resultado['condicion']) {
+            $voucher = new SubagentesVouchers(
+                    null,
+                    $_POST['id_subagente_venta'],
+                    $_POST['fecha_operacion'],
+                    $_POST['nro_operacion'],
+                    $_POST['banco'],
+                    $_POST['nombre_cuenta'],
+                    $resultado['nombre_archivo'],
+                    $_POST['observaciones'],
+                    SessionController::idDesencriptado(),
+                    fecha_hora);
+            $respuesta = $voucher->create();
+            return $this->json($respuesta['error']);
+        } else {
+            return $this->json($respuesta['error'] = 2);
+        }
     }
 
     public static function scriptSubirVoucher($output_dir) {
+        $dividido = explode('/', $output_dir);
         if (isset($_FILES["documento"])) {
             $error = $_FILES["documento"]["error"];
             if (!is_array($_FILES["documento"]["name"])) {
                 $fileName = $_FILES["documento"]["name"];
                 $FileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-                move_uploaded_file($_FILES["documento"]["tmp_name"], ".".$output_dir . '.' . $FileType);
+                $move = move_uploaded_file($_FILES["documento"]["tmp_name"], "." . $output_dir . '.' . $FileType);
+                if (!$move) {
+                    return array(
+                        'nombre_archivo' => $dividido[5] . '.' . $FileType,
+                        'condicion' => false);
+                } else {
+                    return array(
+                        'nombre_archivo' => $dividido[5] . '.' . $FileType,
+                        'condicion' => true);
+                }
             } else {
                 $fileCount = count($_FILES["documento"]["name"]);
                 for ($i = 0; $i < $fileCount; $i++) {
                     $fileName = $_FILES["documento"]["name"][$i];
                     $FileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-                    move_uploaded_file($_FILES["documento"]["tmp_name"][$i], ".".$output_dir . '.' . $FileType);
+                    $move = move_uploaded_file($_FILES["documento"]["tmp_name"][$i], "." . $output_dir . '.' . $FileType);
+                    if (!$move) {
+                        return array(
+                            'nombre_archivo' => $dividido[5] . '.' . $FileType,
+                            'condicion' => false);
+                    } else {
+                        return array(
+                            'nombre_archivo' => $dividido[5] . '.' . $FileType,
+                            'condicion' => true);
+                    }
                 }
             }
         }
-       
     }
 
     public function ventas() {

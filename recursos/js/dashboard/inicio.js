@@ -129,6 +129,7 @@ const Inicio = () => {
             .catch(error => console.error('Error:', error))
             .then(response => {
                 alert(response)
+                console.log(response)
             });
     }
 
