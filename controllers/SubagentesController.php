@@ -67,6 +67,11 @@ class SubagentesController extends Controller {
                     SessionController::idDesencriptado(),
                     fecha_hora);
             $respuesta = $voucher->create();
+            if ($respuesta['error'] == 0) {
+                $venta = SubagentesVentas::getById($_POST['id_subagente_venta']);
+                $venta->setPagado(1);
+                $venta->update();
+            }
             return $this->json($respuesta['error']);
         } else {
             return $this->json($respuesta['error'] = 2);
@@ -74,13 +79,14 @@ class SubagentesController extends Controller {
     }
 
     public static function scriptSubirVoucher($output_dir) {
+        file_exists('.' . $output_dir) ? '' : mkdir('.' . $output_dir, 0777);
         $dividido = explode('/', $output_dir);
         if (isset($_FILES["documento"])) {
             $error = $_FILES["documento"]["error"];
             if (!is_array($_FILES["documento"]["name"])) {
                 $fileName = $_FILES["documento"]["name"];
                 $FileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-                $move = move_uploaded_file($_FILES["documento"]["tmp_name"], "." . $output_dir . '.' . $FileType);
+                $move = move_uploaded_file($_FILES["documento"]["tmp_name"], "." . $output_dir . '/' . $dividido[5] . '.' . $FileType);
                 if (!$move) {
                     return array(
                         'nombre_archivo' => $dividido[5] . '.' . $FileType,
@@ -91,21 +97,25 @@ class SubagentesController extends Controller {
                         'condicion' => true);
                 }
             } else {
+                $archivos = '';
                 $fileCount = count($_FILES["documento"]["name"]);
                 for ($i = 0; $i < $fileCount; $i++) {
                     $fileName = $_FILES["documento"]["name"][$i];
                     $FileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-                    $move = move_uploaded_file($_FILES["documento"]["tmp_name"][$i], "." . $output_dir . '.' . $FileType);
+                    $move = move_uploaded_file($_FILES["documento"]["tmp_name"][$i], "." . $output_dir . '/' . $dividido[5] . '_' . $i . '.' . $FileType);
+                    $archivos = $archivos . ',' . $dividido[5] . '_' . $i . '.' . $FileType;
                     if (!$move) {
                         return array(
-                            'nombre_archivo' => $dividido[5] . '.' . $FileType,
+                            'nombre_archivo' => $archivos,
                             'condicion' => false);
+                        exit;
                     } else {
-                        return array(
-                            'nombre_archivo' => $dividido[5] . '.' . $FileType,
-                            'condicion' => true);
+                        
                     }
                 }
+                return array(
+                    'nombre_archivo' => $archivos,
+                    'condicion' => true);
             }
         }
     }

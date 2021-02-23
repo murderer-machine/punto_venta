@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-02-2021 a las 22:23:47
+-- Tiempo de generación: 23-02-2021 a las 22:27:26
 -- Versión del servidor: 10.4.13-MariaDB
 -- Versión de PHP: 7.4.8
 
@@ -99,7 +99,9 @@ CREATE TABLE `t_subagentes_ventas` (
 --
 
 INSERT INTO `t_subagentes_ventas` (`id`, `id_subagente`, `nombre_archivo_pdf`, `id_usuario`, `pagado`, `fecha_creacion`) VALUES
-(1, 1, '602ec6e050fbf.pdf', 1, 0, '2021-02-18 14:58:24');
+(1, 6, '60355c1557e73.pdf', 1, 1, '2021-02-23 14:48:37'),
+(2, 1, '60356326a5636.pdf', 1, 0, '2021-02-23 15:18:46'),
+(3, 1, '6035652c1554a.pdf', 1, 0, '2021-02-23 15:27:24');
 
 -- --------------------------------------------------------
 
@@ -110,15 +112,22 @@ INSERT INTO `t_subagentes_ventas` (`id`, `id_subagente`, `nombre_archivo_pdf`, `
 CREATE TABLE `t_subagentes_vouchers` (
   `id` int(11) NOT NULL,
   `id_subagente_venta` int(11) NOT NULL,
-  `fecha_operacion` date NOT NULL,
+  `fecha_operacion` text NOT NULL,
   `nro_operacion` int(11) NOT NULL,
   `banco` text NOT NULL,
+  `nombre_cuenta` text NOT NULL,
   `nombre_archivo_imagen` text NOT NULL,
   `observaciones` text NOT NULL,
-  `nombre_archivo` text NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `fecha_creacion` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `t_subagentes_vouchers`
+--
+
+INSERT INTO `t_subagentes_vouchers` (`id`, `id_subagente_venta`, `fecha_operacion`, `nro_operacion`, `banco`, `nombre_cuenta`, `nombre_archivo_imagen`, `observaciones`, `id_usuario`, `fecha_creacion`) VALUES
+(1, 1, '2021-02-02', 2, '02/02/2021', '02/02/2021', ',60355c1557e73_0.jpg,60355c1557e73_1.jpg', '02/02/2021', 1, '2021-02-23 14:49:13');
 
 -- --------------------------------------------------------
 
@@ -188,13 +197,13 @@ ALTER TABLE `t_subagentes`
 -- AUTO_INCREMENT de la tabla `t_subagentes_ventas`
 --
 ALTER TABLE `t_subagentes_ventas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `t_subagentes_vouchers`
 --
 ALTER TABLE `t_subagentes_vouchers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `t_usuarios`
