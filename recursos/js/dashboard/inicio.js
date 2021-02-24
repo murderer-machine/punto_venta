@@ -147,7 +147,6 @@ const Inicio = () => {
                 .then(response => response.json())
                 .catch(error => console.error('Error:', error))
                 .then(response => {
-                    alert(response)
                     setSpinner_voucher(false)
                     if (response == 0) {
                         handleClose()
@@ -235,7 +234,7 @@ const Inicio = () => {
                     {/* <Col xs={12}>
                         {JSON.stringify(datosVoucher)}
                     </Col> */}
-                    <Col xs={12} lg={6}>
+                    <Col xs={12} lg={8}>
                         <Card className="p-3">
                             <Row>
                                 {mensajeCertificado ? (<>
@@ -334,26 +333,8 @@ const Inicio = () => {
                                 </Row>
                             </Card>
                         </>) : (<></>)}
-
                     </Col>
-                    <Col xs={12} lg={6}>
-                        {ventas.map((venta, key_venta) => (
-                            <Card className="p-3 my-1" key={key_venta}>
-                                <Row className="d-flex align-items-center text-center">
-                                    <Col xs={2}>{venta.id}</Col>
-                                    <Col xs={5}>
-                                        <h5 className="m-0"><b>PV. {venta.id_subagente.abreviatura.toUpperCase()}</b></h5>
-                                        {venta.fecha_creacion}<br />
-                                    </Col>
-                                    <Col xs={2}><a href={venta.ruta} target="_blank"><Image src="./img/pdf.svg" className="inicio_img_pdf" /></a></Col>
-                                    <Col xs={3}>{venta.pagado == 0 ? (<>
-                                        <Button variant="contained" type="button" className="btn-principal" size="small" onClick={() => { handleShow(venta.id, venta.ruta_voucher) }}>Voucher</Button>
-                                    </>) : (<></>)}</Col>
-                                </Row>
-                            </Card>
-                        ))}
-                    </Col>
-                    <Col xs={12} lg={6}>
+                    <Col xs={12} lg={12}>
                         {ventas.map((venta, key_venta) => (
                             <Card className="p-3 my-1" key={key_venta}>
                                 <Row className="d-flex align-items-center text-center">
@@ -437,7 +418,6 @@ const Inicio = () => {
                         <Col xs={12} className="mb-3">
                             <TextField
                                 label="Observaciones"
-
                                 name="observaciones"
                                 value={datosVoucher.observaciones}
                                 onChange={handleInputChange}

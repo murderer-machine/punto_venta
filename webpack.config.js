@@ -6,6 +6,7 @@ module.exports = {
         general: './recursos/general',
         ingreso: './recursos/js/auth/ingreso',
         inicio: './recursos/js/dashboard/inicio',
+        ventas: './recursos/js/dashboard/ventas',
     },
     output: {
         path: path.resolve(__dirname, './public/assets/'),

@@ -16,19 +16,23 @@ $app = new Aplicacion($url, dirname(__DIR__));
 //Rutas GET
 
 $app->ruta->get('logout', [SessionController::class, 'logout']);
-
+$app->ruta->get('subagentes/mostrar', [SubagentesController::class, 'mostrar']);
+$app->ruta->get('subagentes/ventas', [SubagentesController::class, 'ventasNoPagado']);
+$app->ruta->get('subagentes/ventaspagado', [SubagentesController::class, 'ventasPagado']);
 //Rutas POST
 $app->ruta->post('login', [SessionController::class, 'login']);
+$app->ruta->post('subagentes/subir', [SubagentesController::class, 'subir']);
+$app->ruta->post('subagentes/subirvoucher', [SubagentesController::class, 'subirVoucher']);
 
 //Vistas
 $app->ruta->get('/', 'ingreso');
 $app->ruta->get('inicio', 'inicio');
+$app->ruta->get('ventas', 'ventas');
 
-$app->ruta->get('subagentes/mostrar', [SubagentesController::class, 'mostrar']);
-$app->ruta->get('subagentes/ventas', [SubagentesController::class, 'ventas']);
 
-$app->ruta->post('subagentes/subir', [SubagentesController::class, 'subir']);
-$app->ruta->post('subagentes/subirvoucher', [SubagentesController::class, 'subirVoucher']);
+
+
+
 
 //Funciones
 

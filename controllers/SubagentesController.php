@@ -103,7 +103,8 @@ class SubagentesController extends Controller {
                     $fileName = $_FILES["documento"]["name"][$i];
                     $FileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
                     $move = move_uploaded_file($_FILES["documento"]["tmp_name"][$i], "." . $output_dir . '/' . $dividido[5] . '_' . $i . '.' . $FileType);
-                    $archivos = $archivos . ',' . $dividido[5] . '_' . $i . '.' . $FileType;
+                    $condicion_archivo = $archivos == '' ? $archivos : $archivos . ',';
+                    $archivos = $condicion_archivo . $dividido[5] . '_' . $i . '.' . $FileType;
                     if (!$move) {
                         return array(
                             'nombre_archivo' => $archivos,
@@ -120,7 +121,7 @@ class SubagentesController extends Controller {
         }
     }
 
-    public function ventas() {
+    public function ventasNoPagado() {
         $ventas = SubagentesVentas::select()->where([['pagado', 0]])->orderBy([['id', 'DESC']])->run()->datos();
         foreach ($ventas as $key => $value) {
             $id_subagente = Subagentes::select('id,abreviatura')->where([['id', $value['id_subagente']]])->run()->datos();
@@ -129,6 +130,36 @@ class SubagentesController extends Controller {
             $ventas[$key]['ruta'] = "/documentos_subidos/certificados_pv/PV. " . mb_strtoupper($id_subagente[0]['abreviatura']) . "/" . $fecha[0] . "/" . $value['nombre_archivo_pdf'];
             $ventas[$key]['ruta_voucher'] = "/documentos_subidos/certificados_pv/PV. " . mb_strtoupper($id_subagente[0]['abreviatura']) . "/" . $fecha[0] . "/" . $nombre_archivo_voucher[0];
             $ventas[$key]['id_subagente'] = $id_subagente[0];
+        }
+        return $this->json($ventas);
+    }
+
+    public function ventasPagado() {
+        $ventas = SubagentesVentas::select('
+                t_subagentes_ventas.id,
+                t_subagentes_ventas.id_subagente,
+                t_subagentes_ventas.nombre_archivo_pdf,
+                t_subagentes_ventas.id_usuario,
+                t_subagentes_ventas.pagado,
+                t_subagentes_ventas.fecha_creacion,
+                t_subagentes_vouchers.fecha_operacion,
+                t_subagentes_vouchers.nro_operacion,
+                t_subagentes_vouchers.banco,
+                t_subagentes_vouchers.nombre_cuenta,
+                t_subagentes_vouchers.nombre_archivo_imagen,
+                t_subagentes_vouchers.observaciones')
+                ->join('t_subagentes_vouchers', 't_subagentes_vouchers.id_subagente_venta', '=', 't_subagentes_ventas.id')
+                ->where([['pagado', 1]])
+                ->run(true)
+                ->datos();
+        foreach ($ventas as $key => $value) {
+            $id_subagente = Subagentes::select('id,abreviatura')->where([['id', $value['id_subagente']]])->run()->datos();
+            $fecha = explode(' ', $value['fecha_creacion']);
+            $nombre_archivo_voucher = explode('.', $value['nombre_archivo_pdf']);
+            $ventas[$key]['ruta'] = "/documentos_subidos/certificados_pv/PV. " . mb_strtoupper($id_subagente[0]['abreviatura']) . "/" . $fecha[0] . "/" . $value['nombre_archivo_pdf'];
+            $ventas[$key]['ruta_voucher'] = "/documentos_subidos/certificados_pv/PV. " . mb_strtoupper($id_subagente[0]['abreviatura']) . "/" . $fecha[0] . "/" . $nombre_archivo_voucher[0] . "/";
+            $ventas[$key]['id_subagente'] = $id_subagente[0];
+            $ventas[$key]['nombre_archivo_imagen'] = explode(',', $value['nombre_archivo_imagen']);
         }
         return $this->json($ventas);
     }
