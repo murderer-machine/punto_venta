@@ -150,7 +150,8 @@ class SubagentesController extends Controller {
                 t_subagentes_vouchers.observaciones')
                 ->join('t_subagentes_vouchers', 't_subagentes_vouchers.id_subagente_venta', '=', 't_subagentes_ventas.id')
                 ->where([['pagado', 1]])
-                ->run(true)
+                ->orderBy([['id', 'DESC']])
+                ->run()
                 ->datos();
         foreach ($ventas as $key => $value) {
             $id_subagente = Subagentes::select('id,abreviatura')->where([['id', $value['id_subagente']]])->run()->datos();

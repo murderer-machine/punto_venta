@@ -9970,3 +9970,16 @@ body {
   color: #fff;
   background-color: #2a427b;
 }
+
+.inicio_img_pdf {
+  width: 40px;
+  height: 40px;
+}
+
+.inicio_img_voucher {
+  height: 50px;
+}
+
+.react-pdf__Page__canvas {
+  margin: 0 auto;
+}
