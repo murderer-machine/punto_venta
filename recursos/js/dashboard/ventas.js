@@ -9,6 +9,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 const Ventas = () => {
     const [condicionVentas, setCondicionVentas] = useState(true)
+    const [url_pdf, setUrl_pdf] = useState('')
     const [ventas, setVentas] = useState([])
     useEffect(() => {
         cargarVentas()
@@ -22,7 +23,8 @@ const Ventas = () => {
     const handleClose = () => {
         setShow(false)
     }
-    const handleShow = () => {
+    const handleShow = (ruta) => {
+        setUrl_pdf(ruta)
         setShow(true)
     }
 
@@ -42,25 +44,28 @@ const Ventas = () => {
                             <Card className="p-3 my-1" key={key_venta}>
                                 <Row className="d-flex align-items-center">
                                     <Col xs={2} lg={1} className="text-center">{venta.id}</Col>
-                                    <Col xs={10} lg={3}>
+                                    <Col xs={10} lg={4}>
                                         <h5 className="m-0 d-inline"><b>PV. {venta.id_subagente.abreviatura.toUpperCase()}</b></h5> - {venta.fecha_creacion}<br />
-                                        <p style={{ lineHeight: '17px' }}>
-                                            <small><b>Fecha Operación : </b>{venta.fecha_operacion} <br />
+                                        <p style={{ lineHeight: '19px' }}>
+                                            <small>
+                                                <b>Fecha Operación : </b>{venta.fecha_operacion} <br />
                                                 <b>Nº Operación : </b>{venta.nro_operacion}<br />
-                                                <b>Banco : </b>{venta.banco}<br />
-                                                <b>Fecha Operación : </b>{venta.nombre_cuenta}<br />
-                                                <b>Fecha Operación : </b>{venta.observaciones}<br />
+                                                <b>Banco : </b>{venta.banco.toUpperCase()}<br />
+                                                <b>Fecha Operación : </b>{venta.nombre_cuenta.toUpperCase()}<br />
+                                                <b>Observaciones : </b>{venta.observaciones.toUpperCase()}<br />
                                             </small>
                                         </p>
                                     </Col>
-                                    <Col xs={6} lg={3} className="text-center"><a href={venta.ruta} target="_blank"><Image src="./img/pdf.svg" className="inicio_img_pdf" /></a></Col>
+                                    <Col xs={6} lg={2} className="text-center">
+                                        <a href={venta.ruta} target="_blank" className="mr-1"><Image src="./img/descarga.svg" className="iconos_" /></a>
+                                        <a href="#" onClick={() => { handleShow(venta.ruta) }} className="mr-1"><Image src="./img/pdf.svg" className="iconos_" /></a>
+                                    </Col>
                                     <Col xs={6} lg={5} className="text-center">
                                         {venta.nombre_archivo_imagen.map((imagen, key_imagen) => (
                                             <Zoom>
                                                 <Image src={`./${venta.ruta_voucher}${imagen}`} key={key_imagen} className="inicio_img_voucher mx-1 my-1" />
                                             </Zoom>
                                         ))}
-                                        <button onClick={handleShow}>aqui</button>
                                     </Col>
                                 </Row>
                             </Card>
@@ -71,15 +76,15 @@ const Ventas = () => {
             <Modal show={show} onHide={handleClose} size="lg">
                 <Modal.Body>
                     <Document
-                        file="/documentos_subidos/certificados_pv/PV.%20KM16/2021-02-25/6037f5b9da2cb.pdf"
+                        file={url_pdf}
                         onLoadSuccess={onDocumentLoadSuccess}
                         renderMode="canvas"
                         loading="Cargando PDF"
 
                     >
-                        <Page pageNumber={pageNumber}  scale={2.5} loading="Cargando PDF"/>
+                        <Page pageNumber={pageNumber} scale={2.0} loading="Cargando PDF" />
                     </Document>
-                    <p>Page {pageNumber} of {numPages}</p>
+                    <p>Página {pageNumber} de {numPages}</p>
 
                 </Modal.Body>
             </Modal>

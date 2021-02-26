@@ -23,10 +23,10 @@ class SubagentesVouchers extends Model {
         $this->id_subagente_venta = $id_subagente_venta;
         $this->fecha_operacion = $fecha_operacion;
         $this->nro_operacion = $nro_operacion;
-        $this->banco = $banco;
-        $this->nombre_cuenta = $nombre_cuenta;
+        $this->banco = mb_strtolower($banco);
+        $this->nombre_cuenta = mb_strtolower($nombre_cuenta);
         $this->nombre_archivo_imagen = $nombre_archivo_imagen;
-        $this->observaciones = $observaciones;
+        $this->observaciones = mb_strtolower($observaciones);
         $this->id_usuario = $id_usuario;
         $this->fecha_creacion = $fecha_creacion;
     }

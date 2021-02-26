@@ -10,6 +10,8 @@ import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Alert, AlertTitle } from '@material-ui/lab'
+import { Document, Page, pdfjs } from "react-pdf"
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 const Inicio = () => {
     const [subagentes, setSubagentes] = useState([])
     const [acceptedFiles, setAcceptedFiles] = useState([])
@@ -227,6 +229,24 @@ const Inicio = () => {
             [name]: type === 'checkbox' ? checked : value
         })
     }
+
+    const [url_pdf, setUrl_pdf] = useState('')
+    const [showpdf, setShowpdf] = useState(false)
+    const handleClosepdf = () => {
+        setShowpdf(false)
+    }
+    const handleShowpdf = (ruta) => {
+        setUrl_pdf(ruta)
+        setShowpdf(true)
+    }
+
+    const [numPages, setNumPages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
+
+    function onDocumentLoadSuccess({ numPages }) {
+        setNumPages(numPages);
+    }
+
     return (
         <Menu modulo="inicio">
             <Container className="mt-2">
@@ -343,7 +363,10 @@ const Inicio = () => {
                                         <h5 className="m-0"><b>PV. {venta.id_subagente.abreviatura.toUpperCase()}</b></h5>
                                         {venta.fecha_creacion}<br />
                                     </Col>
-                                    <Col xs={2}><a href={venta.ruta} target="_blank"><Image src="./img/pdf.svg" className="inicio_img_pdf" /></a></Col>
+                                    <Col xs={2}>
+                                        <a href={venta.ruta} target="_blank"><Image src="./img/descarga.svg" className="iconos_" /></a>
+                                        <a href="#" onClick={() => { handleShowpdf(venta.ruta) }} className="mr-1"><Image src="./img/pdf.svg" className="iconos_" /></a>
+                                    </Col>
                                     <Col xs={3}>{venta.pagado == 0 ? (<>
                                         <Button variant="contained" type="button" className="btn-principal" size="small" onClick={() => { handleShow(venta.id, venta.ruta_voucher) }}>Voucher</Button>
                                     </>) : (<></>)}</Col>
@@ -460,6 +483,21 @@ const Inicio = () => {
                     <Button variant="contained" type="button" className="btn-principal mr-2" size="small" onClick={subirVoucher} disabled={spinner_voucher}>{spinner_voucher ? (<CircularProgress size={15} className="spinner_blanco mr-2" />) : (<></>)} Agregar</Button>
                     <Button variant="contained" type="button" className="btn-principal" size="small" onClick={handleClose} disabled={spinner_voucher}>{spinner_voucher ? (<CircularProgress size={15} className="spinner_blanco mr-2" />) : (<></>)} Cancelar</Button>
                 </Modal.Footer>
+            </Modal>
+            <Modal show={showpdf} onHide={handleClosepdf} size="lg">
+                <Modal.Body>
+                    <Document
+                        file={url_pdf}
+                        onLoadSuccess={onDocumentLoadSuccess}
+                        renderMode="canvas"
+                        loading="Cargando PDF"
+
+                    >
+                        <Page pageNumber={pageNumber} scale={2.0} loading="Cargando PDF" />
+                    </Document>
+                    <p>Página {pageNumber} de {numPages}</p>
+
+                </Modal.Body>
             </Modal>
         </Menu>
     )
