@@ -242,7 +242,7 @@ const Inicio = () => {
 
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
-
+    
     function onDocumentLoadSuccess({ numPages }) {
         setNumPages(numPages);
     }
@@ -493,7 +493,7 @@ const Inicio = () => {
                         loading="Cargando PDF"
 
                     >
-                        <Page pageNumber={pageNumber} scale={2.0} loading="Cargando PDF" />
+                        <Page pageNumber={pageNumber} scale={1.0} loading="Cargando PDF" />
                     </Document>
                     <p>Página {pageNumber} de {numPages}</p>
 

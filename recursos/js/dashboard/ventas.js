@@ -82,7 +82,7 @@ const Ventas = () => {
                         loading="Cargando PDF"
 
                     >
-                        <Page pageNumber={pageNumber} scale={2.0} loading="Cargando PDF" />
+                        <Page pageNumber={pageNumber} scale={1.0} loading="Cargando PDF" />
                     </Document>
                     <p>Página {pageNumber} de {numPages}</p>
 
