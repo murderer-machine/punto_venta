@@ -135,6 +135,8 @@ class SubagentesController extends Controller {
     }
 
     public function ventasPagado() {
+        $busqueda = [['pagado', 1]];
+        !empty($_GET['id']) ? array_push($busqueda, ['id_subagente', $_GET['id']]) : '';
         $ventas = SubagentesVentas::select('
                 t_subagentes_ventas.id,
                 t_subagentes_ventas.id_subagente,
@@ -149,7 +151,7 @@ class SubagentesController extends Controller {
                 t_subagentes_vouchers.nombre_archivo_imagen,
                 t_subagentes_vouchers.observaciones')
                 ->join('t_subagentes_vouchers', 't_subagentes_vouchers.id_subagente_venta', '=', 't_subagentes_ventas.id')
-                ->where([['pagado', 1]])
+                ->where($busqueda)
                 ->orderBy([['id', 'DESC']])
                 ->run()
                 ->datos();

@@ -236,13 +236,14 @@ const Inicio = () => {
         setShowpdf(false)
     }
     const handleShowpdf = (ruta) => {
+        setZoom(1.0)
         setUrl_pdf(ruta)
         setShowpdf(true)
     }
 
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
-    
+    const [zoom, setZoom] = useState(1.0);
     function onDocumentLoadSuccess({ numPages }) {
         setNumPages(numPages);
     }
@@ -486,14 +487,16 @@ const Inicio = () => {
             </Modal>
             <Modal show={showpdf} onHide={handleClosepdf} size="lg">
                 <Modal.Body>
+                    <button onClick={() => { setZoom(zoom + 0.5) }}> + </button>
+                    <button onClick={() => { zoom <= 0.5 ? {} : setZoom(zoom - 0.5) }}> - </button>
                     <Document
                         file={url_pdf}
                         onLoadSuccess={onDocumentLoadSuccess}
                         renderMode="canvas"
                         loading="Cargando PDF"
-
                     >
-                        <Page pageNumber={pageNumber} scale={1.0} loading="Cargando PDF" />
+                        <Page pageNumber={pageNumber} scale={zoom} loading="Cargando PDF" />
+
                     </Document>
                     <p>Página {pageNumber} de {numPages}</p>
 
