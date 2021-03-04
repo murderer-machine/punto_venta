@@ -53,6 +53,13 @@ class Model {
         return self::where($datos, 'OR');
     }
 
+    public static function whereDate($campo, $fecha_inicio, $fecha_fin) {
+        $condicion = strpos(self::$consulta, 'WHERE') ? ' AND ' : ' WHERE ';
+        $consulta = $condicion . "date($campo) BETWEEN date('$fecha_inicio') AND date('$fecha_fin')";
+        self::$consulta = self::$consulta . $consulta;
+        return new self;
+    }
+
     public static function run($consulta = false) {
         try {
             $resultado = self::$db->select(self::$consulta, self::$array_consulta);

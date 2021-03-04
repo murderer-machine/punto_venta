@@ -6,22 +6,33 @@ import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import Button from '@material-ui/core/Button'
 import { Document, Page, pdfjs } from "react-pdf"
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 const Ventas = () => {
     const [datos, setDatos] = useState({
         id_subagente: {},
+        fecha_inicio: '',
+        fecha_final: '',
     })
+    const handleInputChange = (event) => {
+        const { type, checked, name, value } = event.target
+        setDatos({
+            ...datos,
+            [name]: type === 'checkbox' ? checked : value
+        })
+    }
     //---------------------------------------------------------
     const [condicionVentas, setCondicionVentas] = useState(true)
     const [ventas, setVentas] = useState([])
     useEffect(() => {
         cargarVentas()
-    }, [condicionVentas, datos.id_subagente])
+    }, [condicionVentas, datos])
     const cargarVentas = () => {
-        alert(`/subagentes/ventaspagado?id=${Object.keys(datos.id_subagente).length === 0 ? '' : datos.id_subagente.id}`)
-        fetch(`/subagentes/ventaspagado?id=${Object.keys(datos.id_subagente).length === 0 ? '' : datos.id_subagente.id}`)
+        alert(`/subagentes/ventaspagado?id=${Object.keys(datos.id_subagente).length === 0 ? '' : datos.id_subagente.id}&fecha_inicio=${datos.fecha_inicio}&fecha_final=${datos.fecha_final}`)
+
+        fetch(`/subagentes/ventaspagado?id=${Object.keys(datos.id_subagente).length === 0 ? '' : datos.id_subagente.id}&fecha_inicio=${datos.fecha_inicio}&fecha_final=${datos.fecha_final}`)
             .then(response => response.json())
             .then(data => setVentas(data))
     }
@@ -58,40 +69,85 @@ const Ventas = () => {
         <Menu modulo="ventas">
             <Container className="mt-2">
                 <Row className="d-flex justify-content-center">
-                    <Col xs={12} lg={4}>
+                    <Col xs={12} lg={12}>
                         <Card className="p-3 my-1">
-                            <Autocomplete
-                                id="combo-box-demo"
-                                options={subagentes}
-                                getOptionLabel={(option) => Object.keys(option).length === 0 ? '' : `PV. ${option.abreviatura.toUpperCase()}`}
-                                renderInput={(params) =>
+                            <Row>
+                                <Col xs={12} lg={4} className="mb-3">
+                                    <Autocomplete
+                                        id="combo-box-demo"
+                                        options={subagentes}
+                                        getOptionLabel={(option) => Object.keys(option).length === 0 ? '' : `PV. ${option.abreviatura.toUpperCase()}`}
+                                        renderInput={(params) =>
+                                            <TextField
+                                                {...params}
+                                                label="Seleccione punto de venta"
+                                                variant="outlined"
+                                                size="small"
+                                                autoComplete="off"
+                                                fullWidth={true} />
+                                        }
+                                        value={datos.id_subagente}
+                                        onChange={(event, newValue) => {
+                                            if (newValue == null) {
+                                                setDatos({
+                                                    ...datos,
+                                                    id_subagente: {}
+                                                })
+                                            } else {
+                                                setDatos({
+                                                    ...datos,
+                                                    id_subagente: newValue
+                                                })
+                                            }
+                                        }}
+                                    />
+                                </Col>
+                                <Col xs={12} lg={4} className="mb-3">
                                     <TextField
-                                        {...params}
-                                        label="Seleccione punto de venta"
+                                        label="Fecha inicio"
+                                        name="fecha_inicio"
+                                        value={datos.fecha_inicio}
+                                        onChange={handleInputChange}
+                                        type="date"
+                                        fullWidth={true}
                                         variant="outlined"
                                         size="small"
                                         autoComplete="off"
-                                        fullWidth={true} />
-                                }
-                                value={datos.id_subagente}
-                                onChange={(event, newValue) => {
-                                    if (newValue == null) {
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+
+                                    />
+                                </Col>
+                                <Col xs={12} lg={4} className="mb-3">
+                                    <TextField
+                                        label="Fecha final"
+                                        name="fecha_final"
+                                        value={datos.fecha_final}
+                                        onChange={handleInputChange}
+                                        type="date"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        size="small"
+                                        autoComplete="off"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
+                                </Col>
+                                <Col xs={12} lg={4} className="mb-3">
+                                    <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => {
                                         setDatos({
-                                            ...datos,
-                                            id_subagente: {}
+                                            id_subagente: {},
+                                            fecha_inicio: '',
+                                            fecha_final: '',
                                         })
-                                    } else {
-                                        setDatos({
-                                            ...datos,
-                                            id_subagente: newValue
-                                        })
-                                    }
-                                }}
-                            />
-                            {JSON.stringify(datos)}
+                                    }}>Restablecer filtro</Button>
+                                </Col>
+                            </Row>
                         </Card>
                     </Col>
-                    <Col xs={12} lg={8}>
+                    <Col xs={12} lg={12}>
                         {ventas.map((venta, key_venta) => (
                             <Card className="p-3 my-1" key={key_venta}>
                                 <Row className="d-flex align-items-center">
@@ -114,8 +170,8 @@ const Ventas = () => {
                                     </Col>
                                     <Col xs={6} lg={5} className="text-center">
                                         {venta.nombre_archivo_imagen.map((imagen, key_imagen) => (
-                                            <Zoom>
-                                                <Image src={`./${venta.ruta_voucher}${imagen}`} key={key_imagen} className="inicio_img_voucher mx-1 my-1" />
+                                            <Zoom key={key_imagen}>
+                                                <Image src={`./${venta.ruta_voucher}${imagen}`} className="inicio_img_voucher mx-1 my-1" />
                                             </Zoom>
                                         ))}
                                     </Col>

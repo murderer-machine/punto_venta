@@ -134,9 +134,10 @@ class SubagentesController extends Controller {
         return $this->json($ventas);
     }
 
-    public function ventasPagado() {
+    public function ventasPagado(Request $request) {
+        $parametros = $request->parametros();
         $busqueda = [['pagado', 1]];
-        !empty($_GET['id']) ? array_push($busqueda, ['id_subagente', $_GET['id']]) : '';
+        !empty($parametros['id']) ? array_push($busqueda, ['id_subagente', $parametros['id']]) : '';
         $ventas = SubagentesVentas::select('
                 t_subagentes_ventas.id,
                 t_subagentes_ventas.id_subagente,
@@ -152,6 +153,7 @@ class SubagentesController extends Controller {
                 t_subagentes_vouchers.observaciones')
                 ->join('t_subagentes_vouchers', 't_subagentes_vouchers.id_subagente_venta', '=', 't_subagentes_ventas.id')
                 ->where($busqueda)
+                ->whereDate('t_subagentes_ventas.fecha_creacion', $parametros['fecha_inicio'] == '' ? fecha : $parametros['fecha_inicio'], $parametros['fecha_final'] == '' ? fecha : $parametros['fecha_final'])
                 ->orderBy([['id', 'DESC']])
                 ->run()
                 ->datos();
