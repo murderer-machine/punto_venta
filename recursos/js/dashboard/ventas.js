@@ -30,8 +30,6 @@ const Ventas = () => {
         cargarVentas()
     }, [condicionVentas, datos])
     const cargarVentas = () => {
-        alert(`/subagentes/ventaspagado?id=${Object.keys(datos.id_subagente).length === 0 ? '' : datos.id_subagente.id}&fecha_inicio=${datos.fecha_inicio}&fecha_final=${datos.fecha_final}`)
-
         fetch(`/subagentes/ventaspagado?id=${Object.keys(datos.id_subagente).length === 0 ? '' : datos.id_subagente.id}&fecha_inicio=${datos.fecha_inicio}&fecha_final=${datos.fecha_final}`)
             .then(response => response.json())
             .then(data => setVentas(data))
@@ -147,11 +145,18 @@ const Ventas = () => {
                             </Row>
                         </Card>
                     </Col>
+                    {ventas.length <= 0 ? (<>
+                        <Col xs={12} lg={12} className="text-center">
+                            <Card className="p-3 my-1">
+                                No se encontraron resultados.
+                            </Card>
+                        </Col>
+                    </>) : (<></>)}
                     <Col xs={12} lg={12}>
                         {ventas.map((venta, key_venta) => (
                             <Card className="p-3 my-1" key={key_venta}>
                                 <Row className="d-flex align-items-center">
-                                    <Col xs={2} lg={1} className="text-center">{venta.id}</Col>
+                                    <Col xs={2} lg={1} className="text-center">{ventas.length - (key_venta)}</Col>
                                     <Col xs={10} lg={4}>
                                         <h5 className="m-0 d-inline"><b>PV. {venta.id_subagente.abreviatura.toUpperCase()}</b></h5> - {venta.fecha_creacion}<br />
                                         <p style={{ lineHeight: '19px' }}>

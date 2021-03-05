@@ -9941,6 +9941,16 @@ body {
   background-color: rgba(42, 66, 123, 0.8) !important;
 }
 
+.btn-eliminar {
+  background-color: #d73a49 !important;
+  border-width: 0px !important;
+  color: #fff !important;
+}
+
+.btn-eliminar.Mui-disabled {
+  background-color: rgba(215, 58, 73, 0.8) !important;
+}
+
 /*checked*/
 .MuiCheckbox-root.Mui-checked {
   color: #2a427b !important;

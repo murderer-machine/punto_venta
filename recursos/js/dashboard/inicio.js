@@ -255,7 +255,7 @@ const Inicio = () => {
                     {/* <Col xs={12}>
                         {JSON.stringify(datosVoucher)}
                     </Col> */}
-                    <Col xs={12} lg={8}>
+                    <Col xs={12} lg={12}>
                         <Card className="p-3">
                             <Row>
                                 {mensajeCertificado ? (<>
@@ -269,7 +269,7 @@ const Inicio = () => {
                                         </Alert>
                                     </Col>
                                 </>) : (<></>)}
-                                <Col xs={12}>
+                                <Col xs={12} lg={12}>
                                     <Dropzone onDrop={acceptedFiles => {
                                         setAcceptedFiles(acceptedFiles)
                                         LimpiarValidacionCargaCertificado()
@@ -286,7 +286,7 @@ const Inicio = () => {
                                         )}
                                     </Dropzone>
                                 </Col>
-                                <Col xs={12}>
+                                <Col xs={12} lg={6}>
                                     <Autocomplete
                                         id="combo-box-demo"
                                         options={subagentes}
@@ -316,20 +316,16 @@ const Inicio = () => {
                                         }}
                                     />
                                 </Col>
-                                <Col xs={12}>
-                                    <Button variant="contained" type="button" className="btn-principal mt-2" onClick={subirCertificado} disabled={spinner_certificado}>{spinner_certificado ? (<CircularProgress size={15} className="spinner_blanco mr-2" />) : (<></>)}Ingresar</Button>
+                                <Col xs={12} lg={6} className="d-flex justify-content-center align-items-center">
+                                    <Button variant="contained" type="button" className="btn-principal" onClick={subirCertificado} disabled={spinner_certificado}>{spinner_certificado ? (<CircularProgress size={15} className="spinner_blanco mr-2" />) : (<></>)}Ingresar</Button>
                                 </Col>
                             </Row>
                         </Card>
                     </Col>
-                    <Col xs={12} lg={12}>
+                    <Col xs={12} lg={12} className="text-center">
                         {!ventas.length ? (<>
                             <Card className="p-3 my-1">
-                                <Row className="d-flex align-items-center text-center">
-                                    <Col xs={12}>
-                                        Pagos al dia.
-                                    </Col>
-                                </Row>
+                                No se encontraron resultados.
                             </Card>
                         </>) : (<></>)}
                         {mensajesValidacionCargaCertificado.success ? (<>
@@ -496,10 +492,8 @@ const Inicio = () => {
                         loading="Cargando PDF"
                     >
                         <Page pageNumber={pageNumber} scale={zoom} loading="Cargando PDF" />
-
                     </Document>
                     <p>Página {pageNumber} de {numPages}</p>
-
                 </Modal.Body>
             </Modal>
         </Menu>

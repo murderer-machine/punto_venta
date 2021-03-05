@@ -37,7 +37,14 @@ body {
 .btn-principal.Mui-disabled {
     background-color: rgba($color: $color_principal, $alpha: 0.8) !important;
 }
-
+.btn-eliminar {
+    background-color: $color_error !important;
+    border-width: 0px !important;
+    color: #fff !important;
+}
+.btn-eliminar.Mui-disabled {
+    background-color: rgba($color: $color_error, $alpha: 0.8) !important;
+}
 /*checked*/
 .MuiCheckbox-root.Mui-checked {
     color: $color_principal !important;
@@ -74,6 +81,4 @@ body {
 }
 .react-pdf__Page__canvas {
     margin: 0 auto;
-    
-    
 }

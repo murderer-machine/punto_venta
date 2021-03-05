@@ -9,7 +9,7 @@ use alekas\core\Aplicacion;
 use alekas\models\SubagentesVentas;
 use alekas\controllers\auth\SessionController;
 use alekas\models\SubagentesVouchers;
-
+use alekas\corelib\FechaHora;
 class SubagentesController extends Controller {
 
     public function __construct() {
@@ -161,6 +161,7 @@ class SubagentesController extends Controller {
             $id_subagente = Subagentes::select('id,abreviatura')->where([['id', $value['id_subagente']]])->run()->datos();
             $fecha = explode(' ', $value['fecha_creacion']);
             $nombre_archivo_voucher = explode('.', $value['nombre_archivo_pdf']);
+            $ventas[$key]['fecha_operacion'] = FechaHora::CambiarTipo($value['fecha_operacion']);
             $ventas[$key]['ruta'] = "/documentos_subidos/certificados_pv/PV. " . mb_strtoupper($id_subagente[0]['abreviatura']) . "/" . $fecha[0] . "/" . $value['nombre_archivo_pdf'];
             $ventas[$key]['ruta_voucher'] = "/documentos_subidos/certificados_pv/PV. " . mb_strtoupper($id_subagente[0]['abreviatura']) . "/" . $fecha[0] . "/" . $nombre_archivo_voucher[0] . "/";
             $ventas[$key]['id_subagente'] = $id_subagente[0];
