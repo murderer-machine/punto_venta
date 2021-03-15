@@ -38,7 +38,7 @@ class Session {
         session_start();
     }
 
-    static function imprimirSession() {
+    public static function imprimirSession() {
         print_r($_SESSION);
         print_r($_COOKIE);
     }
@@ -49,21 +49,21 @@ class Session {
         return true;
     }
 
-    static function getValue($var) {
+    public static function getValue($var) {
         return $_SESSION[$var];
     }
 
-    static function setValue($var, $val) {
+    public static function setValue($var, $val) {
         $_SESSION[$var] = $val;
     }
 
-    static function unsetValue($var) {
+    public static function unsetValue($var) {
         if (isset($_SESSION[$var])) {
             unset($_SESSION[$var]);
         }
     }
 
-    static function exist() {
+    public static function exist() {
         return sizeof($_SESSION) > 0 ? true : false;
     }
 

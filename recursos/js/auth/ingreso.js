@@ -13,7 +13,7 @@ const Ingreso = () => {
     const [datos, setDatos] = useState({
         dni: '',
         password: '',
-        recordar: false,
+        recordar: true,
     })
     const [datos_verificado, setDatos_verificado] = useState({
         dni: true,
