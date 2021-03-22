@@ -24,7 +24,7 @@ class Controller {
         Session::exist() ?: header('Location: /');
     }
 
-    public function VerificarSessionAuth() {
+    public static function VerificarSessionAuth() {
         Session::exist() ? header('Location: /inicio') : '';
     }
 
