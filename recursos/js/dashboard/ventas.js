@@ -9,6 +9,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import Button from '@material-ui/core/Button'
 import { Document, Page, pdfjs } from "react-pdf"
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+import AgregarDatosPolizas from './agregar_datos_poliza'
 
 const Ventas = () => {
     const [datos, setDatos] = useState({
@@ -186,6 +187,7 @@ const Ventas = () => {
                     </Col>
                 </Row>
             </Container>
+            <AgregarDatosPolizas />
             <Modal show={show} onHide={handleClose} size="lg">
                 <Modal.Body>
                     <button onClick={() => { setZoom(zoom + 0.5) }}> + </button>

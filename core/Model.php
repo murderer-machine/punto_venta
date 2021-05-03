@@ -99,7 +99,7 @@ class Model {
         $whereReturn = self::select($campos)->where([['id', $id]])->run()->datos();
         $data = $whereReturn[0] ?? array();
         if (count($data) === 0) {
-            echo 'no existe el id';
+            echo 0;
             die();
         } else {
             $result = self::instanciate($data);
