@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button'
 import { Document, Page, pdfjs } from "react-pdf"
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 import AgregarDatosPolizas from './agregar_datos_poliza'
-
+import Alert from 'react-bootstrap/Alert'
 const Ventas = () => {
     const [datos, setDatos] = useState({
         id_subagente: {},
@@ -53,6 +53,15 @@ const Ventas = () => {
         setUrl_pdf(ruta)
         setShow(true)
     }
+    const [showDatosSoat, setShowDatosSoat] = useState(false)
+    const handleCloseDatosSoat = () => {
+        setShowDatosSoat(false)
+    }
+    const handleShowDatosSoat = (ruta) => {
+        setZoom(1.2)
+        setUrl_pdf(ruta)
+        setShowDatosSoat(true)
+    }
     //---------------------------------------------------------
     const [subagentes, setSubagentes] = useState([])
     const mostrarSubagentes = async () => {
@@ -64,6 +73,7 @@ const Ventas = () => {
         mostrarSubagentes()
     }, [])
     //---------------------------------------------------------
+
     return (
         <Menu modulo="ventas">
             <Container className="mt-2">
@@ -115,7 +125,6 @@ const Ventas = () => {
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
-
                                     />
                                 </Col>
                                 <Col xs={12} lg={4} className="mb-3">
@@ -153,7 +162,7 @@ const Ventas = () => {
                             </Card>
                         </Col>
                     </>) : (<></>)}
-                    <Col xs={12} lg={12}>
+                    <Col xs={12} lg={12} className="mb-3">
                         {ventas.map((venta, key_venta) => (
                             <Card className="p-3 my-1" key={key_venta}>
                                 <Row className="d-flex align-items-center">
@@ -174,12 +183,21 @@ const Ventas = () => {
                                         <a href={venta.ruta} target="_blank" className="mr-1"><Image src="./img/descarga.svg" className="iconos_" /></a>
                                         <a href="#" onClick={() => { handleShow(venta.ruta) }} className="mr-1"><Image src="./img/pdf.svg" className="iconos_" /></a>
                                     </Col>
-                                    <Col xs={6} lg={5} className="text-center">
+                                    <Col xs={6} lg={3} className="text-center">
                                         {venta.nombre_archivo_imagen.map((imagen, key_imagen) => (
                                             <Zoom key={key_imagen}>
                                                 <Image src={`./${venta.ruta_voucher}${imagen}`} className="inicio_img_voucher mx-1 my-1" />
                                             </Zoom>
                                         ))}
+                                    </Col>
+                                    <Col xs={6} lg={2} className="text-center">
+                                        {venta.datos_soat === 0 ? (<>
+                                            <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => { handleShowDatosSoat(venta.ruta) }}>Registrar</Button>
+                                        </>) : (<>
+                                            <Alert variant="success">
+                                                Registrado
+                                        </Alert>
+                                        </>)}
                                     </Col>
                                 </Row>
                             </Card>
@@ -187,9 +205,25 @@ const Ventas = () => {
                     </Col>
                 </Row>
             </Container>
-            <AgregarDatosPolizas />
+
             <Modal show={show} onHide={handleClose} size="lg">
                 <Modal.Body>
+                    <button onClick={() => { setZoom(zoom + 0.5) }}> + </button>
+                    <button onClick={() => { zoom <= 0.5 ? {} : setZoom(zoom - 0.5) }}> - </button>
+                    <Document
+                        file={url_pdf}
+                        onLoadSuccess={onDocumentLoadSuccess}
+                        renderMode="canvas"
+                        loading="Cargando PDF"
+                    >
+                        <Page pageNumber={pageNumber} scale={zoom} loading="Cargando PDF" />
+                    </Document>
+                    <p>Página {pageNumber} de {numPages}</p>
+                </Modal.Body>
+            </Modal>
+            <Modal show={showDatosSoat} onHide={handleCloseDatosSoat} size="lg">
+                <Modal.Body>
+                    <AgregarDatosPolizas />
                     <button onClick={() => { setZoom(zoom + 0.5) }}> + </button>
                     <button onClick={() => { zoom <= 0.5 ? {} : setZoom(zoom - 0.5) }}> - </button>
                     <Document

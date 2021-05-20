@@ -9,6 +9,10 @@ const Inicio = () => {
     const [datos, setDatos] = useState({
         id_empresa_seguro: {},
         id_producto: {},
+        nro_poliza: '',
+        placa: '',
+        importe: '',
+        datos_cliente: '',
     })
     const cargarEmpresas = () => {
         fetch('/empresasseguros/mostrar')
@@ -25,6 +29,18 @@ const Inicio = () => {
             .then(response => response.json())
             .then(data => setRamos(data))
     }
+    const handleInputChange = (event) => {
+        const { type, checked, name, value } = event.target
+        setDatos({
+            ...datos,
+            [name]:
+                {
+                    'checkbox': checked,
+                    'text': value.trim(),
+                    'number': value.trim(),
+                }[type]
+        })
+    }
     useEffect(() => {
         cargarRamos()
     }, [datos.id_producto])
@@ -34,6 +50,7 @@ const Inicio = () => {
     useEffect(() => {
         cargarEmpresas()
     }, [])
+
     return (
         <>
             <Container>
@@ -41,7 +58,7 @@ const Inicio = () => {
                     <Col>
                         <Card className="p-3">
                             <Row>
-                                <Col xs={12} className="mb-3">
+                                <Col xs={12} lg={12} className="mb-3">
                                     <Autocomplete
                                         options={empresasSeguro}
                                         getOptionLabel={(option) => Object.keys(option).length === 0 ? '' : `${option.nombre.toUpperCase()}`}
@@ -72,9 +89,9 @@ const Inicio = () => {
                                             }
                                         }}
                                     />
-                                    {JSON.stringify(datos.id_empresa_seguro)}
+                                    {/* {JSON.stringify(datos.id_empresa_seguro)} */}
                                 </Col>
-                                <Col xs={12} className="mb-3">
+                                <Col xs={12} lg={12} className="mb-3">
                                     <Autocomplete
                                         options={productos}
                                         getOptionLabel={(option) => Object.keys(option).length === 0 ? '' : `${option.nombre.toUpperCase()}`}
@@ -103,9 +120,9 @@ const Inicio = () => {
                                             }
                                         }}
                                     />
-                                    {JSON.stringify(datos.id_producto)}
+                                    {/* {JSON.stringify(datos.id_producto)} */}
                                 </Col>
-                                <Col xs={12} className="mb-3">
+                                <Col xs={12} lg={6} className="mb-3">
                                     <TextField
                                         label="Ramo"
                                         value={ramos.toUpperCase()}
@@ -119,7 +136,83 @@ const Inicio = () => {
                                         }}
                                         disabled
                                     />
-                                    {JSON.stringify(ramos)}
+                                    {/* {JSON.stringify(ramos)} */}
+                                </Col>
+                                <Col xs={12} lg={6} className="mb-3">
+                                    <TextField
+                                        label="Nº Póliza"
+                                        name="nro_poliza"
+                                        value={datos.nro_poliza}
+                                        type="text"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        size="small"
+                                        autoComplete="off"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        onChange={handleInputChange}
+                                    />
+                                    {/* {JSON.stringify(datos.nro_poliza)} */}
+                                </Col>
+                                <Col xs={12} lg={2} className="mb-3">
+                                    <TextField
+                                        label="Placa"
+                                        name="placa"
+                                        value={datos.placa}
+                                        type="text"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        size="small"
+                                        autoComplete="off"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        onChange={handleInputChange}
+                                    />
+                                    {/* {JSON.stringify(datos.placa)} */}
+                                </Col>
+                                <Col xs={12} lg={6} className="mb-3">
+                                    <TextField
+                                        label="Datos del Cliente"
+                                        name="datos_cliente"
+                                        value={datos.datos_cliente}
+                                        type="text"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        size="small"
+                                        autoComplete="off"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        onChange={handleInputChange}
+                                    />
+                                    {/* {JSON.stringify(datos.datos_cliente)} */}
+                                </Col>
+                                <Col xs={12} lg={4} className="mb-3">
+                                    <TextField
+                                        label="Importe"
+                                        name="importe"
+                                        value={datos.importe}
+                                        type="number"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        size="small"
+                                        autoComplete="off"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        inputProps={{
+                                            maxLength: 13,
+                                            step: "0.01"
+                                        }}
+                                        onChange={handleInputChange}
+                                    />
+                                    {/* {JSON.stringify(datos.importe)} */}
+                                   
+                                </Col>
+                                <Col xs={12}>
+                                {JSON.stringify(datos)}
                                 </Col>
                             </Row>
                         </Card>

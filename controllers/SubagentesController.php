@@ -10,6 +10,7 @@ use alekas\models\SubagentesVentas;
 use alekas\controllers\auth\SessionController;
 use alekas\models\SubagentesVouchers;
 use alekas\corelib\FechaHora;
+
 class SubagentesController extends Controller {
 
     public function __construct() {
@@ -166,6 +167,7 @@ class SubagentesController extends Controller {
             $ventas[$key]['ruta_voucher'] = "/documentos_subidos/certificados_pv/PV. " . mb_strtoupper($id_subagente[0]['abreviatura']) . "/" . $fecha[0] . "/" . $nombre_archivo_voucher[0] . "/";
             $ventas[$key]['id_subagente'] = $id_subagente[0];
             $ventas[$key]['nombre_archivo_imagen'] = explode(',', $value['nombre_archivo_imagen']);
+            $ventas[$key]['datos_soat'] = rand(0, 1);
         }
         return $this->json($ventas);
     }
