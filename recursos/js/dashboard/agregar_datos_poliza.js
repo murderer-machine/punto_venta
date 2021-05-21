@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Card, Image, Modal } from 'react-bootstrap'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import TextField from '@material-ui/core/TextField'
-const Inicio = () => {
+const Inicio = ({ idsubagenteventa }) => {
     const [empresasSeguro, setEmpresasSeguro] = useState([])
     const [productos, setProductos] = useState([])
     const [ramos, setRamos] = useState('')
     const [datos, setDatos] = useState({
+        id_subagente_venta: idsubagenteventa,
         id_empresa_seguro: {},
         id_producto: {},
         nro_poliza: '',
@@ -209,10 +210,10 @@ const Inicio = () => {
                                         onChange={handleInputChange}
                                     />
                                     {/* {JSON.stringify(datos.importe)} */}
-                                   
+
                                 </Col>
                                 <Col xs={12}>
-                                {JSON.stringify(datos)}
+                                    {JSON.stringify(datos)}
                                 </Col>
                             </Row>
                         </Card>

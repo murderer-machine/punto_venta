@@ -10,7 +10,7 @@ class EmpresasSeguroController extends Controller {
 
     public function mostrar() {
       
-        $empresas_seguro = EmpresasSeguro::select('id,nombre,activo')->where([['activo', 1]])->run()->datos(true);
+        $empresas_seguro = EmpresasSeguro::select()->where([['activo', 1]])->run()->datos(true);
         return $empresas_seguro;
     }
 

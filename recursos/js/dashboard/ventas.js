@@ -17,6 +17,7 @@ const Ventas = () => {
         fecha_inicio: '',
         fecha_final: '',
     })
+    const [id_subagente_venta, setId_subagente_venta] = useState('')
     const handleInputChange = (event) => {
         const { type, checked, name, value } = event.target
         setDatos({
@@ -57,7 +58,8 @@ const Ventas = () => {
     const handleCloseDatosSoat = () => {
         setShowDatosSoat(false)
     }
-    const handleShowDatosSoat = (ruta) => {
+    const handleShowDatosSoat = (ruta, id_subagente_venta) => {
+        setId_subagente_venta(id_subagente_venta)
         setZoom(1.2)
         setUrl_pdf(ruta)
         setShowDatosSoat(true)
@@ -192,7 +194,9 @@ const Ventas = () => {
                                     </Col>
                                     <Col xs={6} lg={2} className="text-center">
                                         {venta.datos_soat === 0 ? (<>
-                                            <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => { handleShowDatosSoat(venta.ruta) }}>Registrar</Button>
+                                            <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => {
+                                                handleShowDatosSoat(venta.ruta, venta.id)
+                                            }}>Registrar</Button>
                                         </>) : (<>
                                             <Alert variant="success">
                                                 Registrado
@@ -223,7 +227,7 @@ const Ventas = () => {
             </Modal>
             <Modal show={showDatosSoat} onHide={handleCloseDatosSoat} size="lg">
                 <Modal.Body>
-                    <AgregarDatosPolizas />
+                    <AgregarDatosPolizas idsubagenteventa={id_subagente_venta} />
                     <button onClick={() => { setZoom(zoom + 0.5) }}> + </button>
                     <button onClick={() => { zoom <= 0.5 ? {} : setZoom(zoom - 0.5) }}> - </button>
                     <Document
