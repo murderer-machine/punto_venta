@@ -209,7 +209,6 @@ const Ventas = () => {
                     </Col>
                 </Row>
             </Container>
-
             <Modal show={show} onHide={handleClose} size="lg">
                 <Modal.Body>
                     <button onClick={() => { setZoom(zoom + 0.5) }}> + </button>

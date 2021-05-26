@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Card, Image, Modal } from 'react-bootstrap'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 const Inicio = ({ idsubagenteventa }) => {
     const [empresasSeguro, setEmpresasSeguro] = useState([])
     const [productos, setProductos] = useState([])
@@ -51,7 +52,6 @@ const Inicio = ({ idsubagenteventa }) => {
     useEffect(() => {
         cargarEmpresas()
     }, [])
-
     return (
         <>
             <Container>
@@ -210,9 +210,11 @@ const Inicio = ({ idsubagenteventa }) => {
                                         onChange={handleInputChange}
                                     />
                                     {/* {JSON.stringify(datos.importe)} */}
-
                                 </Col>
                                 <Col xs={12}>
+                                    <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => {
+                                        alert('hola')
+                                    }}>Registrar</Button>
                                     {JSON.stringify(datos)}
                                 </Col>
                             </Row>

@@ -11,6 +11,7 @@ use alekas\controllers\SubagentesController;
 use alekas\controllers\EmpresasSeguroController;
 use alekas\controllers\ProductosSeguroController;
 use alekas\controllers\RamosController;
+use alekas\controllers\DatosSoatController;
 
 $url = $_GET['alekas_url'] ?? "/";
 
@@ -30,6 +31,7 @@ $app->ruta->get('ramos/mostrar', [RamosController::class, 'mostrar']);
 $app->ruta->post('login', [SessionController::class, 'login']);
 $app->ruta->post('subagentes/subir', [SubagentesController::class, 'subir']);
 $app->ruta->post('subagentes/subirvoucher', [SubagentesController::class, 'subirVoucher']);
+$app->ruta->post('datossoat/agregar', [DatosSoatController::class, 'agregar']);
 
 //Vistas
 $app->ruta->get('/', 'ingreso');
