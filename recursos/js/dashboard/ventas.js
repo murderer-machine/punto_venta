@@ -11,6 +11,7 @@ import { Document, Page, pdfjs } from "react-pdf"
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 import AgregarDatosPolizas from './agregar_datos_poliza'
 import Alert from 'react-bootstrap/Alert'
+import Spinner from 'react-bootstrap/Spinner'
 const Ventas = () => {
     const [datos, setDatos] = useState({
         id_subagente: {},
@@ -26,16 +27,26 @@ const Ventas = () => {
         })
     }
     //---------------------------------------------------------
-    const [condicionVentas, setCondicionVentas] = useState(true)
+
     const [ventas, setVentas] = useState([])
     useEffect(() => {
+        setCarga(true)
         cargarVentas()
-    }, [condicionVentas, datos])
+    }, [])
     const cargarVentas = () => {
+        setCarga(true)
         fetch(`/subagentes/ventaspagado?id=${Object.keys(datos.id_subagente).length === 0 ? '' : datos.id_subagente.id}&fecha_inicio=${datos.fecha_inicio}&fecha_final=${datos.fecha_final}`)
             .then(response => response.json())
-            .then(data => setVentas(data))
+            .then(data => {
+                setVentas(data)
+                setCarga(false)
+            })
     }
+    const cargarVentasPDF = () => {
+        window.open(`/subagentes/ventaspagadopdf?id=${Object.keys(datos.id_subagente).length === 0 ? '' : datos.id_subagente.id}&fecha_inicio=${datos.fecha_inicio}&fecha_final=${datos.fecha_final}`, "_blank")
+    }
+    //---------------------------------------------------------
+    const [carga, setCarga] = useState(false)
     //---------------------------------------------------------
     const [url_pdf, setUrl_pdf] = useState('')
     const [numPages, setNumPages] = useState(null);
@@ -75,7 +86,14 @@ const Ventas = () => {
         mostrarSubagentes()
     }, [])
     //---------------------------------------------------------
-
+    const restablecerFiltro = () => {
+        setDatos({
+            id_subagente: {},
+            fecha_inicio: '',
+            fecha_final: '',
+        })
+        setVentas([])
+    }
     return (
         <Menu modulo="ventas">
             <Container className="mt-2">
@@ -145,68 +163,77 @@ const Ventas = () => {
                                         }}
                                     />
                                 </Col>
-                                <Col xs={12} lg={4} className="mb-3">
-                                    <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => {
-                                        setDatos({
-                                            id_subagente: {},
-                                            fecha_inicio: '',
-                                            fecha_final: '',
-                                        })
-                                    }}>Restablecer filtro</Button>
+                                <Col xs={12} lg={3} className="mb-3">
+                                    <Button variant="contained" type="button" className="btn-principal mt-2" fullWidth onClick={cargarVentas} disabled={datos.fecha_final == '' || datos.fecha_inicio == '' ? true : false}>Buscar</Button>
+                                </Col>
+                                <Col xs={12} lg={3} className="mb-3">
+                                    <Button variant="contained" type="button" className="btn-principal mt-2" fullWidth onClick={restablecerFiltro} disabled={Object.keys(datos.id_subagente).length >= 0 && datos.fecha_final == '' && datos.fecha_inicio == '' ? true : false}>Restablecer filtro</Button>
+                                </Col>
+                                <Col xs={12} lg={3} className="mb-3">
+                                    <Button variant="contained" type="button" className="btn-principal mt-2" fullWidth onClick={cargarVentasPDF} disabled={Object.keys(datos.id_subagente).length >= 0 && datos.fecha_final == '' || datos.fecha_inicio == '' ? true : false}>Generar Reporte</Button>
                                 </Col>
                             </Row>
                         </Card>
                     </Col>
-                    {ventas.length <= 0 ? (<>
+                    {carga ? (<>
                         <Col xs={12} lg={12} className="text-center">
-                            <Card className="p-3 my-1">
-                                No se encontraron resultados.
+                            <Card className="p-3 my-1 text-center">
+                                <div><Spinner animation="border" as="span" size="sm" /> Generando datos.</div>
                             </Card>
                         </Col>
-                    </>) : (<></>)}
-                    <Col xs={12} lg={12} className="mb-3">
-                        {ventas.map((venta, key_venta) => (
-                            <Card className="p-3 my-1" key={key_venta}>
-                                <Row className="d-flex align-items-center">
-                                    <Col xs={2} lg={1} className="text-center">{ventas.length - (key_venta)}</Col>
-                                    <Col xs={10} lg={4}>
-                                        <h5 className="m-0 d-inline"><b>PV. {venta.id_subagente.abreviatura.toUpperCase()}</b></h5> - {venta.fecha_creacion}<br />
-                                        <p style={{ lineHeight: '19px' }}>
-                                            <small>
-                                                <b>Fecha Operación : </b>{venta.fecha_operacion} <br />
-                                                <b>Nº Operación : </b>{venta.nro_operacion}<br />
-                                                <b>Banco : </b>{venta.banco.toUpperCase()}<br />
-                                                <b>Fecha Operación : </b>{venta.nombre_cuenta.toUpperCase()}<br />
-                                                <b>Observaciones : </b>{venta.observaciones.toUpperCase()}<br />
-                                            </small>
-                                        </p>
-                                    </Col>
-                                    <Col xs={6} lg={2} className="text-center">
-                                        <a href={venta.ruta} target="_blank" className="mr-1"><Image src="./img/descarga.svg" className="iconos_" /></a>
-                                        <a href="#" onClick={() => { handleShow(venta.ruta) }} className="mr-1"><Image src="./img/pdf.svg" className="iconos_" /></a>
-                                    </Col>
-                                    <Col xs={6} lg={3} className="text-center">
-                                        {venta.nombre_archivo_imagen.map((imagen, key_imagen) => (
-                                            <Zoom key={key_imagen}>
-                                                <Image src={`./${venta.ruta_voucher}${imagen}`} className="inicio_img_voucher mx-1 my-1" />
-                                            </Zoom>
-                                        ))}
-                                    </Col>
-                                    <Col xs={6} lg={2} className="text-center">
-                                        {venta.datos_soat === 0 ? (<>
-                                            <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => {
-                                                handleShowDatosSoat(venta.ruta, venta.id)
-                                            }}>Registrar</Button>
-                                        </>) : (<>
-                                            <Alert variant="success">
-                                                Registrado
-                                        </Alert>
-                                        </>)}
-                                    </Col>
-                                </Row>
+                    </>) : (<>
+                        {ventas.length <= 0 ? (<>
+                            <Col xs={12} lg={12} className="text-center">
+                                <Card className="p-3 my-1">
+                                    No se encontraron resultados.
                             </Card>
-                        ))}
-                    </Col>
+                            </Col>
+                        </>) : (<>
+                            <Col xs={12} lg={12} className="mb-3">
+                                {ventas.map((venta, key_venta) => (
+                                    <Card className="p-3 my-1" key={key_venta}>
+                                        <Row className="d-flex align-items-center">
+                                            <Col xs={2} lg={1} className="text-center">{ventas.length - (key_venta)}</Col>
+                                            <Col xs={10} lg={4}>
+                                                <h5 className="m-0 d-inline"><b>PV. {venta.id_subagente.abreviatura.toUpperCase()}</b></h5> - {venta.fecha_creacion}<br />
+                                                <p style={{ lineHeight: '19px' }}>
+                                                    <small>
+                                                        <b>Fecha Operación : </b>{venta.fecha_operacion} <br />
+                                                        <b>Nº Operación : </b>{venta.nro_operacion}<br />
+                                                        <b>Banco : </b>{venta.banco.toUpperCase()}<br />
+                                                        <b>Fecha Operación : </b>{venta.nombre_cuenta.toUpperCase()}<br />
+                                                        <b>Observaciones : </b>{venta.observaciones.toUpperCase()}<br />
+                                                    </small>
+                                                </p>
+                                            </Col>
+                                            <Col xs={6} lg={2} className="text-center">
+                                                <a href={venta.ruta} target="_blank" className="mr-1"><Image src="./img/descarga.svg" className="iconos_" /></a>
+                                                <a href="#" onClick={() => { handleShow(venta.ruta) }} className="mr-1"><Image src="./img/pdf.svg" className="iconos_" /></a>
+                                            </Col>
+                                            <Col xs={6} lg={3} className="text-center">
+                                                {venta.nombre_archivo_imagen.map((imagen, key_imagen) => (
+                                                    <Zoom key={key_imagen}>
+                                                        <Image src={`./${venta.ruta_voucher}${imagen}`} className="inicio_img_voucher mx-1 my-1" />
+                                                    </Zoom>
+                                                ))}
+                                            </Col>
+                                            <Col xs={6} lg={2} className="text-center">
+                                                {venta.datos_soat === 0 ? (<>
+                                                    <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => {
+                                                        handleShowDatosSoat(venta.ruta, venta.id)
+                                                    }}>Registrar</Button>
+                                                </>) : (<>
+                                                    <Alert variant="success">
+                                                        Registrado
+                                        </Alert>
+                                                </>)}
+                                            </Col>
+                                        </Row>
+                                    </Card>
+                                ))}
+                            </Col>
+                        </>)}
+                    </>)}
                 </Row>
             </Container>
             <Modal show={show} onHide={handleClose} size="lg">
@@ -226,7 +253,7 @@ const Ventas = () => {
             </Modal>
             <Modal show={showDatosSoat} onHide={handleCloseDatosSoat} size="lg">
                 <Modal.Body>
-                    <AgregarDatosPolizas idsubagenteventa={id_subagente_venta} />
+                    <AgregarDatosPolizas idsubagenteventa={id_subagente_venta} handleCloseDatosSoat={handleCloseDatosSoat} cargarVentas={cargarVentas} />
                     <button onClick={() => { setZoom(zoom + 0.5) }}> + </button>
                     <button onClick={() => { zoom <= 0.5 ? {} : setZoom(zoom - 0.5) }}> - </button>
                     <Document

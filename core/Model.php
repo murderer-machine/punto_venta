@@ -176,7 +176,10 @@ class Model {
         self::$consulta = self::$consulta . " INNER JOIN $table ON $argumento_a $operador $argumento_b";
         return new self;
     }
-
+  public function fullOuterJoin($table, $argumento_a, $operador, $argumento_b) {
+        self::$consulta = self::$consulta . " FULL OUTER JOIN $table ON $argumento_a $operador $argumento_b";
+        return new self;
+    }
     public function orderBy($datos) {
         self::$consulta = self::$consulta . " ORDER BY ";
         $count = count($datos) - 1;

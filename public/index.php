@@ -22,6 +22,7 @@ $app->ruta->get('logout', [SessionController::class, 'logout']);
 $app->ruta->get('subagentes/mostrar', [SubagentesController::class, 'mostrar']);
 $app->ruta->get('subagentes/ventas', [SubagentesController::class, 'ventasNoPagado']);
 $app->ruta->get('subagentes/ventaspagado', [SubagentesController::class, 'ventasPagado']);
+$app->ruta->get('subagentes/ventaspagadopdf', [SubagentesController::class, 'ventasPagadoPDF']);
 
 $app->ruta->get('empresasseguros/mostrar', [EmpresasSeguroController::class, 'mostrar']);
 $app->ruta->get('productosseguros/mostrar', [ProductosSeguroController::class, 'mostrar']);

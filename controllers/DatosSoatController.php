@@ -11,7 +11,7 @@ class DatosSoatController extends Controller {
 
     public function agregar(Request $request) {
         $parametro = $request->parametrosJson();
-        
+
         $prima_comercial = Numeros::convertirDecimal($parametro->importe) / 1.18;
         $factor = $parametro->id_producto->id_ramo == '66' ? $parametro->id_empresa_seguro->factor_soat : $parametro->id_empresa_seguro->factor_general;
         $prima_neta = Numeros::convertirDecimal($parametro->importe) / $factor;
@@ -36,7 +36,8 @@ class DatosSoatController extends Controller {
                 $comision_broker = $comision,
                 $porcentaje = $parametro->id_producto->comision,
                 $comision_agente = $comision_agente);
-        $respuesta = $datos_soat->create();
+        $resultado = $datos_soat->create();
+        return $this->json($resultado["error"]);
     }
 
 }

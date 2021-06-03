@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Image, Modal } from 'react-bootstrap'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-const Inicio = ({ idsubagenteventa }) => {
+const Inicio = ({ idsubagenteventa, handleCloseDatosSoat, cargarVentas }) => {
     const [empresasSeguro, setEmpresasSeguro] = useState([])
     const [productos, setProductos] = useState([])
     const [ramos, setRamos] = useState('')
@@ -16,6 +16,32 @@ const Inicio = ({ idsubagenteventa }) => {
         importe: '',
         datos_cliente: '',
     })
+    const [validacion, setValidacion] = useState({
+        id_empresa_seguro: true,
+        id_producto: true,
+        nro_poliza: true,
+        placa: true,
+        importe: true,
+        datos_cliente: true,
+    })
+    const validarVocuher = () => {
+        let id_empresa_seguro = Object.keys(datos.id_empresa_seguro).length == 0 ? false : true
+        let id_producto = Object.keys(datos.id_producto).length == 0 ? false : true
+        let nro_poliza = datos.nro_poliza == '' ? false : true
+        let placa = datos.placa == '' ? false : true
+        let importe = datos.importe == '' ? false : true
+        let datos_cliente = datos.datos_cliente == '' ? false : true
+        setValidacion({
+            ...validacion,
+            id_empresa_seguro: id_empresa_seguro,
+            id_producto: id_producto,
+            nro_poliza: nro_poliza,
+            placa: placa,
+            importe: importe,
+            datos_cliente: datos_cliente,
+        })
+        return id_empresa_seguro && id_producto && nro_poliza && placa && importe && datos_cliente
+    }
     const cargarEmpresas = () => {
         fetch('/empresasseguros/mostrar')
             .then(response => response.json())
@@ -30,6 +56,31 @@ const Inicio = ({ idsubagenteventa }) => {
         fetch(`/ramos/mostrar?id=${Object.keys(datos.id_producto).length === 0 ? '' : datos.id_producto.id_ramo}`)
             .then(response => response.json())
             .then(data => setRamos(data))
+    }
+    const registrarDatosSoat = () => {
+        if (validarVocuher()) {
+            var url = '/datossoat/agregar'
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(datos),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => res.json())
+                .catch(error => alert('Error:', error))
+                .then(response => {
+                    if (response == 0) {
+                        alert('agregado')
+                        handleCloseDatosSoat()
+                        cargarVentas()
+                    }
+                    if (response == 1) {
+                        alert('ocurrio un error')
+                    }
+                })
+        } else {
+
+        }
     }
     const handleInputChange = (event) => {
         const { type, checked, name, value } = event.target
@@ -67,6 +118,7 @@ const Inicio = ({ idsubagenteventa }) => {
                                             <TextField
                                                 {...params}
                                                 label="Seleccione Empresa"
+                                                error={!validacion.id_empresa_seguro}
                                                 variant="outlined"
                                                 size="small"
                                                 autoComplete="off"
@@ -99,6 +151,7 @@ const Inicio = ({ idsubagenteventa }) => {
                                         renderInput={(params) =>
                                             <TextField
                                                 {...params}
+                                                error={!validacion.id_producto}
                                                 label="Seleccione Producto"
                                                 variant="outlined"
                                                 size="small"
@@ -142,6 +195,7 @@ const Inicio = ({ idsubagenteventa }) => {
                                 <Col xs={12} lg={6} className="mb-3">
                                     <TextField
                                         label="Nº Póliza"
+                                        error={!validacion.nro_poliza}
                                         name="nro_poliza"
                                         value={datos.nro_poliza}
                                         type="text"
@@ -159,6 +213,7 @@ const Inicio = ({ idsubagenteventa }) => {
                                 <Col xs={12} lg={2} className="mb-3">
                                     <TextField
                                         label="Placa"
+                                        error={!validacion.placa}
                                         name="placa"
                                         value={datos.placa}
                                         type="text"
@@ -176,6 +231,7 @@ const Inicio = ({ idsubagenteventa }) => {
                                 <Col xs={12} lg={6} className="mb-3">
                                     <TextField
                                         label="Datos del Cliente"
+                                        error={!validacion.datos_cliente}
                                         name="datos_cliente"
                                         value={datos.datos_cliente}
                                         type="text"
@@ -193,6 +249,7 @@ const Inicio = ({ idsubagenteventa }) => {
                                 <Col xs={12} lg={4} className="mb-3">
                                     <TextField
                                         label="Importe"
+                                        error={!validacion.importe}
                                         name="importe"
                                         value={datos.importe}
                                         type="number"
@@ -213,9 +270,9 @@ const Inicio = ({ idsubagenteventa }) => {
                                 </Col>
                                 <Col xs={12}>
                                     <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => {
-                                        alert('hola')
+                                        registrarDatosSoat()
                                     }}>Registrar</Button>
-                                    {JSON.stringify(datos)}
+                                    {/* {JSON.stringify(datos)} */}
                                 </Col>
                             </Row>
                         </Card>
