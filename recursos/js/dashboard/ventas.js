@@ -43,7 +43,7 @@ const Ventas = () => {
             })
     }
     const cargarVentasPDF = () => {
-        window.open(`/subagentes/ventaspagadopdf?id=${Object.keys(datos.id_subagente).length === 0 ? '' : datos.id_subagente.id}&fecha_inicio=${datos.fecha_inicio}&fecha_final=${datos.fecha_final}`, "_blank")
+        window.open(`/subagentes/ventaspagadopdf?id=${Object.keys(datos.id_subagente).length === 0 ? '' : datos.id_subagente.id}&fecha_inicio=${datos.fecha_inicio}&fecha_final=${datos.fecha_final}`, "_self")
     }
     //---------------------------------------------------------
     const [carga, setCarga] = useState(false)
@@ -164,7 +164,7 @@ const Ventas = () => {
                                     />
                                 </Col>
                                 <Col xs={12} lg={3} className="mb-3">
-                                    <Button variant="contained" type="button" className="btn-principal mt-2" fullWidth onClick={cargarVentas} disabled={datos.fecha_final == '' || datos.fecha_inicio == '' ? true : false}>Buscar</Button>
+                                    <Button variant="contained" type="button" className="btn-principal mt-2" fullWidth onClick={cargarVentas} disabled={datos.fecha_final == '' || datos.fecha_inicio == '' || carga ? true : false}>Buscar</Button>
                                 </Col>
                                 <Col xs={12} lg={3} className="mb-3">
                                     <Button variant="contained" type="button" className="btn-principal mt-2" fullWidth onClick={restablecerFiltro} disabled={Object.keys(datos.id_subagente).length >= 0 && datos.fecha_final == '' && datos.fecha_inicio == '' ? true : false}>Restablecer filtro</Button>

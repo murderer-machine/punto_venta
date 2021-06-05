@@ -89,8 +89,8 @@ const Inicio = ({ idsubagenteventa, handleCloseDatosSoat, cargarVentas }) => {
             [name]:
                 {
                     'checkbox': checked,
-                    'text': value.trim(),
-                    'number': value.trim(),
+                    'text': value,
+                    'number': value,
                 }[type]
         })
     }
@@ -252,18 +252,11 @@ const Inicio = ({ idsubagenteventa, handleCloseDatosSoat, cargarVentas }) => {
                                         error={!validacion.importe}
                                         name="importe"
                                         value={datos.importe}
-                                        type="number"
+                                        type="text"
                                         fullWidth={true}
                                         variant="outlined"
                                         size="small"
                                         autoComplete="off"
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        inputProps={{
-                                            maxLength: 13,
-                                            step: "0.01"
-                                        }}
                                         onChange={handleInputChange}
                                     />
                                     {/* {JSON.stringify(datos.importe)} */}
@@ -272,7 +265,7 @@ const Inicio = ({ idsubagenteventa, handleCloseDatosSoat, cargarVentas }) => {
                                     <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => {
                                         registrarDatosSoat()
                                     }}>Registrar</Button>
-                                    {/* {JSON.stringify(datos)} */}
+                                    {JSON.stringify(datos)}
                                 </Col>
                             </Row>
                         </Card>

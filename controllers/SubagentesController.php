@@ -228,11 +228,11 @@ class SubagentesController extends Controller {
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
         $daticos = '<img src="' . $base64 . '" width="300"><br/><br/>';
 
-        $cabeza_tabla = '<table style="font-size:9px;">
-                            <tr>
-                                <th style="border:1px solid black;padding:2px;background-color:#00B0F0">F. DE VENTA</th>
-                                <th style="border:1px solid black;padding:2px;background-color:#00B0F0">EMPRESA</th>
-                                <th style="border:1px solid black;padding:2px;background-color:#00B0F0">PRODUCTO</th>
+        $cabeza_tabla = '<table style="font-size:10px;">
+                            <tr>                                
+                                <th style="border:1px solid black;padding:2px;background-color:#00B0F0">FECHA</th>
+                                <th style="border:1px solid black;padding:2px;background-color:#00B0F0">COMPAÑIA</th>
+                                <th style="border:1px solid black;padding:2px;background-color:#00B0F0">USO</th>
                                 <th style="border:1px solid black;padding:2px;background-color:#00B0F0">PÓLIZA</th>
                                 <th style="border:1px solid black;padding:2px;background-color:#00B0F0">PLACA</th>
                                 <th style="border:1px solid black;padding:2px;background-color:#00B0F0">PRIMA TOTAL</th>
@@ -241,7 +241,7 @@ class SubagentesController extends Controller {
                                 <th style="border:1px solid black;padding:2px;background-color:#00B0F0">%</th>
                                 <th style="border:1px solid black;padding:2px;background-color:#00B0F0">COM. AGENTE</th>
                                 <th style="border:1px solid black;padding:2px;background-color:#00B0F0">DATOS DEL CLIENTE</th>
-                                <th style="border:1px solid black;padding:2px;background-color:#00B0F0">TIPO EMISION</th>                                
+                                <th style="border:1px solid black;padding:2px;background-color:#00B0F0">PUNTO DE VENTA</th>                         
                             </tr>
                         '
         ;
@@ -252,26 +252,77 @@ class SubagentesController extends Controller {
         $comision_broker = 0;
         $comision_agente = 0;
 
+        $contador_rimac = 0;
+        $contador_protecta = 0;
+        $contador_positiva = 0;
+        $contador_pacifico = 0;
+        $contador_mapfre = 0;
+        $contador_crecer = 0;
+
         foreach ($ventas as $value) {
+            if (strpos($value['datos_soat']['id_empresa']['nombre'], 'rimac') !== false):
+                $nombre_empresa = "rimac";
+                $contador_rimac += 1;
+            elseif (strpos($value['datos_soat']['id_empresa']['nombre'], 'protecta') !== false):
+                $nombre_empresa = "protecta";
+                $contador_protecta += 1;
+            elseif (strpos($value['datos_soat']['id_empresa']['nombre'], 'positiva') !== false):
+                $nombre_empresa = "positiva";
+                $contador_positiva += 1;
+            elseif (strpos($value['datos_soat']['id_empresa']['nombre'], 'pacifico') !== false):
+                $nombre_empresa = "pacifico";
+                $contador_pacifico += 1;
+            elseif (strpos($value['datos_soat']['id_empresa']['nombre'], 'mapfre') !== false):
+                $nombre_empresa = "mapfre";
+                $contador_mapfre += 1;
+            elseif (strpos($value['datos_soat']['id_empresa']['nombre'], 'crecer') !== false):
+                $nombre_empresa = "crecer";
+                $contador_crecer += 1;
+            else:
+                $nombre_empresa = $value['datos_soat']['id_empresa']['nombre'];
+            endif;
+
+            if (strpos($value['datos_soat']['id_producto']['nombre'], 'carga') !== false):
+                $nombre_producto = "carga";
+            elseif (strpos($value['datos_soat']['id_producto']['nombre'], 'interprovincial') !== false):
+                $nombre_producto = "interprovincial";
+            elseif (strpos($value['datos_soat']['id_producto']['nombre'], 'moto') !== false):
+                $nombre_producto = "moto";
+            elseif (strpos($value['datos_soat']['id_producto']['nombre'], 'particular') !== false):
+                $nombre_producto = "particular";
+            elseif (strpos($value['datos_soat']['id_producto']['nombre'], 'servcicio escolar') !== false):
+                $nombre_producto = "servcicio escolar";
+            elseif (strpos($value['datos_soat']['id_producto']['nombre'], 'taxi') !== false):
+                $nombre_producto = "taxi";
+            elseif (strpos($value['datos_soat']['id_producto']['nombre'], 'transporte personal') !== false):
+                $nombre_producto = "transporte personal";
+            elseif (strpos($value['datos_soat']['id_producto']['nombre'], 'transporte urbano') !== false):
+                $nombre_producto = "transporte urbano";
+            elseif (strpos($value['datos_soat']['id_producto']['nombre'], 'turismo') !== false):
+                $nombre_producto = "turismo";
+            elseif (strpos($value['datos_soat']['id_producto']['nombre'], 'interprovincial') !== false):
+                $nombre_producto = "interprovincial";
+            else:
+                $nombre_producto = $value['datos_soat']['id_producto']['nombre'];
+            endif;
             $importe = $importe + $value['datos_soat']['importe'];
             $prima_neta = $prima_neta + $value['datos_soat']['prima_neta'];
             $comision_broker = $comision_broker + $value['datos_soat']['comision_broker'];
             $comision_agente = $comision_agente + $value['datos_soat']['comision_agente'];
-            $cuerpo_tabla = $cuerpo_tabla . '
-                        
-                        <tr> 
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . $value['fecha_operacion'] . '</td>
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . mb_strtoupper($value['datos_soat']['id_empresa']['nombre']) . '</td>    
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . mb_strtoupper($value['datos_soat']['id_producto']['nombre']) . '</td>    
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . $value['datos_soat']['nro_poliza'] . '</td>
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . $value['datos_soat']['placa'] . '</td>
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . $value['datos_soat']['importe'] . '</td>
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . $value['datos_soat']['prima_neta'] . '</td>
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . $value['datos_soat']['comision_broker'] . '</td>
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . $value['datos_soat']['porcentaje'] . ' %</td>
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . $value['datos_soat']['comision_agente'] . '</td>
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . $value['datos_soat']['datos_cliente'] . '</td>
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">DIGITAL</td>     
+            $cuerpo_tabla = $cuerpo_tabla . '                   
+                        <tr>                             
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['fecha_operacion'] . '</td>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . mb_strtoupper($nombre_empresa) . '</td>    
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . mb_strtoupper($nombre_producto) . '</td>    
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['nro_poliza'] . '</td>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['placa'] . '</td>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['importe'] . '</td>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['prima_neta'] . '</td>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['comision_broker'] . '</td>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['porcentaje'] . ' %</td>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['comision_agente'] . '</td>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['datos_cliente'] . '</td>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>PV. ' . mb_strtoupper($value['id_subagente']['abreviatura']) . '</td>                           
                         </tr>
                     ';
         }
@@ -279,23 +330,52 @@ class SubagentesController extends Controller {
                 <br/>
                 <table style="font-size:12px;">
                     <tr>
-                        <td style="border:1px solid black;padding:2px;background-color:#00B0F0">TOTAL PRIMA TOTAL : </td>
-                        <td style="border:1px solid black;padding:2px;">' . Numeros::convertirDecimal($importe) . '</td>
+                        <td style="border:1px solid black;padding:2px;background-color:#00B0F0">PRIMA TOTAL</td>
+                        <td style="border:1px solid black;padding:2px;text-align: center;">' . Numeros::convertirDecimal($importe) . '</td>
                     </tr>
                      <tr>
-                        <td style="border:1px solid black;padding:2px;background-color:#00B0F0">TOTAL PRIMA NETA : </td>
-                        <td style="border:1px solid black;padding:2px;">' . Numeros::convertirDecimal($prima_neta) . '</td>
+                        <td style="border:1px solid black;padding:2px;background-color:#00B0F0">PRIMA NETA</td>
+                        <td style="border:1px solid black;padding:2px;text-align: center;">' . Numeros::convertirDecimal($prima_neta) . '</td>
                     </tr>
                      <tr>
-                        <td style="border:1px solid black;padding:2px;background-color:#00B0F0">TOTAL COMISION BROKER : </td>
-                        <td style="border:1px solid black;padding:2px;">' . Numeros::convertirDecimal($comision_broker) . '</td>
+                        <td style="border:1px solid black;padding:2px;background-color:#00B0F0">COMISION BROKER</td>
+                        <td style="border:1px solid black;padding:2px;text-align: center;">' . Numeros::convertirDecimal($comision_broker) . '</td>
                     </tr>
                      <tr>
-                        <td style="border:1px solid black;padding:2px;background-color:#FFFF00">TOTAL COMISION AGENTE : </td>
-                        <td style="border:1px solid black;padding:2px;">' . Numeros::convertirDecimal($comision_agente) . '</td>
+                        <td style="border:1px solid black;padding:2px;background-color:#FFFF00">COMISION AGENTE</td>
+                        <td style="border:1px solid black;padding:2px;background-color:#FFFF00;text-align: center;">' . Numeros::convertirDecimal($comision_agente) . '</td>
                     </tr>
                 </table>';
-        $daticos = $daticos . $cabeza_tabla . $cuerpo_tabla . $pie_tabla . $tabla_totales;
+        $tabla_totales_empresa = '
+                <br/>
+                <table style="font-size:12px;">
+                    <tr>
+                        <td style="border:1px solid black;padding:2px;background-color:#D0D0D0">TOTAL RIMAC</td>
+                        <td style="border:1px solid black;padding:2px;text-align: center;">' . $contador_rimac . '</td>
+                    </tr>
+                     <tr>
+                        <td style="border:1px solid black;padding:2px;background-color:#D0D0D0">TOTAL PROTECTA</td>
+                        <td style="border:1px solid black;padding:2px;text-align: center;">' . $contador_protecta . '</td>
+                    </tr>
+                     <tr>
+                        <td style="border:1px solid black;padding:2px;background-color:#D0D0D0">TOTAL POSITIVA</td>
+                        <td style="border:1px solid black;padding:2px;text-align: center;">' . $contador_positiva . '</td>
+                    </tr>
+                     <tr>
+                        <td style="border:1px solid black;padding:2px;background-color:#D0D0D0">TOTAL PACIFICO</td>
+                        <td style="border:1px solid black;padding:2px;text-align: center;">' . $contador_pacifico . '</td>
+                    </tr>
+                     <tr>
+                        <td style="border:1px solid black;padding:2px;background-color:#D0D0D0">TOTAL MAPFRE</td>
+                        <td style="border:1px solid black;padding:2px;text-align: center;">' . $contador_mapfre . '</td>
+                    </tr>
+                     <tr>
+                        <td style="border:1px solid black;padding:2px;background-color:#D0D0D0">TOTAL CRECER</td>
+                        <td style="border:1px solid black;padding:2px;text-align: center;">' . $contador_crecer . '</td>
+                    </tr>
+                    
+                </table>';
+        $daticos = $daticos . $cabeza_tabla . $cuerpo_tabla . $pie_tabla . $tabla_totales . $tabla_totales_empresa;
 
         //echo $daticos;
         $dompdf = new Dompdf();
@@ -303,6 +383,7 @@ class SubagentesController extends Controller {
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
         $dompdf->stream('reporte');
+        
     }
 
 }
