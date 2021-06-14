@@ -229,7 +229,8 @@ class SubagentesController extends Controller {
         $daticos = '<img src="' . $base64 . '" width="300"><br/><br/>';
 
         $cabeza_tabla = '<table style="font-size:10px;">
-                            <tr>                                
+                            <tr>
+                                <th style="border:1px solid black;padding:2px;background-color:#00B0F0">#</th>
                                 <th style="border:1px solid black;padding:2px;background-color:#00B0F0">FECHA</th>
                                 <th style="border:1px solid black;padding:2px;background-color:#00B0F0">COMPAÑIA</th>
                                 <th style="border:1px solid black;padding:2px;background-color:#00B0F0">USO</th>
@@ -252,6 +253,8 @@ class SubagentesController extends Controller {
         $comision_broker = 0;
         $comision_agente = 0;
 
+        $contador_items = 0;
+
         $contador_rimac = 0;
         $contador_protecta = 0;
         $contador_positiva = 0;
@@ -260,6 +263,8 @@ class SubagentesController extends Controller {
         $contador_crecer = 0;
 
         foreach ($ventas as $value) {
+            $contador_items++;
+
             if (strpos($value['datos_soat']['id_empresa']['nombre'], 'rimac') !== false):
                 $nombre_empresa = "rimac";
                 $contador_rimac += 1;
@@ -310,7 +315,8 @@ class SubagentesController extends Controller {
             $comision_broker = $comision_broker + $value['datos_soat']['comision_broker'];
             $comision_agente = $comision_agente + $value['datos_soat']['comision_agente'];
             $cuerpo_tabla = $cuerpo_tabla . '                   
-                        <tr>                             
+                        <tr>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $contador_items . '</td>
                             <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['fecha_operacion'] . '</td>
                             <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . mb_strtoupper($nombre_empresa) . '</td>    
                             <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . mb_strtoupper($nombre_producto) . '</td>    
@@ -321,7 +327,7 @@ class SubagentesController extends Controller {
                             <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['comision_broker'] . '</td>
                             <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['porcentaje'] . ' %</td>
                             <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['comision_agente'] . '</td>
-                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>' . $value['datos_soat']['datos_cliente'] . '</td>
+                            <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;">' . $value['datos_soat']['datos_cliente'] . '</td>
                             <td style="border:1px solid black;padding:2px;text-align: center;vertical-align:middle;" nowrap>PV. ' . mb_strtoupper($value['id_subagente']['abreviatura']) . '</td>                           
                         </tr>
                     ';
@@ -383,7 +389,6 @@ class SubagentesController extends Controller {
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
         $dompdf->stream('reporte');
-        
     }
 
 }
