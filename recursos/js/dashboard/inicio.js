@@ -20,6 +20,7 @@ const Inicio = () => {
     const [condicionVentas, setCondicionVentas] = useState(true)
     const [datos, setDatos] = useState({
         id_subagente: {},
+        observaciones_poliza : '',
     })
     const [datosVoucher, setDatosVoucher] = useState({
         id_subagente_venta: '',
@@ -229,7 +230,13 @@ const Inicio = () => {
             [name]: type === 'checkbox' ? checked : value
         })
     }
-
+    const handleInputChangeDatos = (event) => {
+        const { type, checked, name, value } = event.target
+        setDatos({
+            ...datos,
+            [name]: type === 'checkbox' ? checked : value
+        })
+    }
     const [url_pdf, setUrl_pdf] = useState('')
     const [showpdf, setShowpdf] = useState(false)
     const handleClosepdf = () => {
@@ -269,7 +276,7 @@ const Inicio = () => {
                                         </Alert>
                                     </Col>
                                 </>) : (<></>)}
-                                <Col xs={12} lg={12}>
+                                <Col xs={12} lg={12} className="mb-2">
                                     <Dropzone onDrop={acceptedFiles => {
                                         setAcceptedFiles(acceptedFiles)
                                         LimpiarValidacionCargaCertificado()
@@ -286,7 +293,24 @@ const Inicio = () => {
                                         )}
                                     </Dropzone>
                                 </Col>
-                                <Col xs={12} lg={6}>
+                                <Col xs={12} lg={12} className="mb-2">
+                                    <TextField
+                                        label="Observaciones"
+                                        value={datos.observaciones}
+                                        type="text"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        placeholder="Aqui ingrese celular y correo del cliente"
+                                        multiline
+                                        rows={2}
+                                        autoComplete="off"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        onChange={handleInputChange}
+                                    />
+                                </Col>
+                                <Col xs={12} lg={6} className="mb-2">
                                     <Autocomplete
                                         id="combo-box-demo"
                                         options={subagentes}
@@ -316,7 +340,8 @@ const Inicio = () => {
                                         }}
                                     />
                                 </Col>
-                                <Col xs={12} lg={6} className="d-flex justify-content-center align-items-center">
+                              
+                                <Col xs={12} lg={6} className="d-flex justify-content-center align-items-center" className="mb-2">
                                     <Button variant="contained" type="button" className="btn-principal" onClick={subirCertificado} disabled={spinner_certificado}>{spinner_certificado ? (<CircularProgress size={15} className="spinner_blanco mr-2" />) : (<></>)}Ingresar</Button>
                                 </Col>
                             </Row>
@@ -439,8 +464,8 @@ const Inicio = () => {
                             <TextField
                                 label="Observaciones"
                                 name="observaciones"
-                                value={datosVoucher.observaciones}
-                                onChange={handleInputChange}
+                                value={datosVoucher.observaciones_poliza}
+                                onChange={handleInputChangeDatos}
                                 type="text"
                                 fullWidth={true}
                                 variant="outlined"
@@ -456,8 +481,8 @@ const Inicio = () => {
                                     <>
                                         <div {...getRootProps({ className: `dropzone m-0 p-3 mb-2 ${!validacionVoucher.acceptedFilesVoucher ? 'dropzone_error' : ''}` })} >
                                             <input {...getInputProps()} />
-                                                    Seleccione o arrastre
-                                                </div>
+                                            Seleccione o arrastre
+                                        </div>
                                         <h6>Archivo seleccionado : </h6>
                                         <ol>{filesVoucher}</ol>
                                     </>

@@ -15,6 +15,8 @@ const Inicio = ({ idsubagenteventa, handleCloseDatosSoat, cargarVentas }) => {
         placa: '',
         importe: '',
         datos_cliente: '',
+        correo: '',
+        celular: '',
     })
     const [validacion, setValidacion] = useState({
         id_empresa_seguro: true,
@@ -261,11 +263,39 @@ const Inicio = ({ idsubagenteventa, handleCloseDatosSoat, cargarVentas }) => {
                                     />
                                     {/* {JSON.stringify(datos.importe)} */}
                                 </Col>
+                                <Col xs={12} lg={6} className="mb-3">
+                                    <TextField
+                                        label="Correo"
+                                        name="correo"
+                                        value={datos.correo}
+                                        type="text"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        size="small"
+                                        autoComplete="off"
+                                        onChange={handleInputChange}
+                                    />
+                                    {/* {JSON.stringify(datos.importe)} */}
+                                </Col>
+                                <Col xs={12} lg={6} className="mb-3">
+                                    <TextField
+                                        label="Celular"
+                                        name="celular"
+                                        value={datos.celular}
+                                        type="text"
+                                        fullWidth={true}
+                                        variant="outlined"
+                                        size="small"
+                                        autoComplete="off"
+                                        onChange={handleInputChange}
+                                    />
+                                    {/* {JSON.stringify(datos.importe)} */}
+                                </Col>
                                 <Col xs={12}>
                                     <Button variant="contained" type="button" className="btn-principal mt-2" onClick={() => {
                                         registrarDatosSoat()
                                     }}>Registrar</Button>
-                                    {JSON.stringify(datos)}
+                                    {/* {JSON.stringify(datos)} */}
                                 </Col>
                             </Row>
                         </Card>
